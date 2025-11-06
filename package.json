@@ -1,0 +1,14 @@
+{
+  "name": "work-environment-review-system",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend-app",
+    "frontend-dashboard"
+  ],
+  "scripts": {
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:dashboard": "cd frontend-dashboard && npm run dev",
+    "dev:app": "cd frontend-app && npm start"
+  }
+}
