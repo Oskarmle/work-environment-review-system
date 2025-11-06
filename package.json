@@ -9,6 +9,11 @@
   "scripts": {
     "dev:backend": "cd backend && npm run start:dev",
     "dev:dashboard": "cd frontend-dashboard && npm run dev",
-    "dev:app": "cd frontend-app && npm start"
+    "dev:app": "cd frontend-app && npm start",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:dashboard\" \"npm run dev:app\" --names \"backend,dashboard,app\" --prefix-colors \"cyan,magenta,yellow\"",
+    "dev": "npm run dev:all"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
   }
 }
