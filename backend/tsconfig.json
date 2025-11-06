@@ -9,6 +9,7 @@
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
+    // FIXME: baseUrl is going to be deprecated, need to migrate to "paths" later
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
