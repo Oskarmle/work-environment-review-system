@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Report } from 'src/app/report/entities/report.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class FocusArea {
@@ -13,4 +14,7 @@ export class FocusArea {
 
   @Column()
   isActive: boolean;
+
+  @OneToMany(() => Report, (report) => report.focusArea)
+  reports: Report[];
 }

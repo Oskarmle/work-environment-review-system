@@ -1,0 +1,41 @@
+import { Optional } from '@nestjs/common';
+import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
+import { Station } from 'src/app/station/entities/station.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Report {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  doesAmgKnowTasks: boolean;
+
+  @Column()
+  reportAccidents: boolean;
+
+  @Column()
+  workWithRelevantAmgAreas: boolean;
+
+  @Column()
+  followUpApvAndWellBeing: boolean;
+
+  @Column()
+  actionPlanMade: boolean;
+
+  @Column()
+  @Optional()
+  comment?: boolean;
+
+  @Column()
+  revisedAt: Date;
+
+  @Column()
+  isCompleted: boolean;
+
+  @ManyToOne(() => FocusArea, (focusArea) => focusArea.reports)
+  focusArea: FocusArea;
+
+  @ManyToOne(() => Station, (station) => station.reports)
+  station: Station;
+}

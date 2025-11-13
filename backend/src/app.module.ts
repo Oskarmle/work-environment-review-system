@@ -5,6 +5,7 @@ import { StationModule } from './app/station/station.module';
 import { RoleModule } from './app/role/role.module';
 import { FocusAreaModule } from './app/focus-area/focus-area.module';
 import { UserModule } from './app/user/user.module';
+import { ReportModule } from './app/report/report.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './app/user/user.module';
     RoleModule,
     FocusAreaModule,
     UserModule,
+    ReportModule,
   ],
 })
 export class AppModule {}
