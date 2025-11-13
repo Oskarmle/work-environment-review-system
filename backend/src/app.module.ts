@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { dbConfig } from './database/data-source';
-import { StationsModule } from './app/stations/stations.module';
-import { RolesModule } from './app/roles/roles.module';
-import { FocusAreasModule } from './app/focus-areas/focus-areas.module';
+import { StationModule } from './app/station/station.module';
+import { RoleModule } from './app/role/role.module';
+import { FocusAreaModule } from './app/focus-area/focus-area.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(dbConfig),
-    StationsModule,
-    RolesModule,
-    FocusAreasModule,
+    StationModule,
+    RoleModule,
+    FocusAreaModule,
   ],
 })
 export class AppModule {}
