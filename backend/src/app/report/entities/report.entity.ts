@@ -1,5 +1,6 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
+import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
 import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
 import {
@@ -8,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -46,6 +48,12 @@ export class Report {
 
   @ManyToOne(() => Station, (station) => station.reports)
   station: Station;
+
+  @OneToMany(
+    () => SectionFieldResponse,
+    (sectionFieldResponse) => sectionFieldResponse.report,
+  )
+  sectionFieldResponses: SectionFieldResponse[];
 
   @ManyToMany(() => Section, (section) => section.reports)
   @JoinTable()

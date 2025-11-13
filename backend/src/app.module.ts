@@ -8,6 +8,7 @@ import { UserModule } from './app/user/user.module';
 import { ReportModule } from './app/report/report.module';
 import { SectionModule } from './app/section/section.module';
 import { SectionFieldModule } from './app/section-field/section-field.module';
+import { SectionFieldResponseModule } from './app/section-field-response/section-field-response.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SectionFieldModule } from './app/section-field/section-field.module';
     ReportModule,
     SectionModule,
     SectionFieldModule,
+    SectionFieldResponseModule,
   ],
 })
 export class AppModule {}
