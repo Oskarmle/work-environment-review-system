@@ -1,7 +1,15 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
+import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Report {
@@ -38,4 +46,8 @@ export class Report {
 
   @ManyToOne(() => Station, (station) => station.reports)
   station: Station;
+
+  @ManyToMany(() => Section, (section) => section.reports)
+  @JoinTable()
+  sections: Section[];
 }
