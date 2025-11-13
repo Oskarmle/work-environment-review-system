@@ -4,6 +4,7 @@ import { dbConfig } from './database/data-source';
 import { StationModule } from './app/station/station.module';
 import { RoleModule } from './app/role/role.module';
 import { FocusAreaModule } from './app/focus-area/focus-area.module';
+import { UserModule } from './app/user/user.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { FocusAreaModule } from './app/focus-area/focus-area.module';
     StationModule,
     RoleModule,
     FocusAreaModule,
+    UserModule,
   ],
 })
 export class AppModule {}
