@@ -3,6 +3,7 @@ import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
 import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
+import { User } from 'src/app/user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -58,4 +59,8 @@ export class Report {
   @ManyToMany(() => Section, (section) => section.reports)
   @JoinTable()
   sections: Section[];
+
+  @ManyToMany(() => User, (user) => user.reports)
+  @JoinTable()
+  users: User[];
 }

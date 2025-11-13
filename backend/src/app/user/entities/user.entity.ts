@@ -1,6 +1,13 @@
+import { Report } from 'src/app/report/entities/report.entity';
 import { Role } from 'src/app/role/entities/role.entity';
 import { Station } from 'src/app/station/entities/station.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,4 +25,7 @@ export class User {
 
   @ManyToOne(() => Station, (station) => station.users)
   station: Station;
+
+  @ManyToMany(() => Report, (report) => report.users)
+  reports: Report[];
 }
