@@ -12,6 +12,7 @@
     // FIXME: baseUrl is going to be deprecated, need to migrate to "paths" later
     "baseUrl": "./",
     "incremental": true,
+    "ignoreDeprecations": "6.0",
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
