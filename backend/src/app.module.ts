@@ -9,6 +9,8 @@ import { ReportModule } from './app/report/report.module';
 import { SectionModule } from './app/section/section.module';
 import { SectionFieldModule } from './app/section-field/section-field.module';
 import { SectionFieldResponseModule } from './app/section-field-response/section-field-response.module';
+import { AuthModule } from './app/auth/auth.module';
+import { AuthService } from './app/auth/auth.service';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { SectionFieldResponseModule } from './app/section-field-response/section
     SectionModule,
     SectionFieldModule,
     SectionFieldResponseModule,
+    AuthModule,
   ],
+  providers: [AuthService],
 })
 export class AppModule {}
