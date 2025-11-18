@@ -3,10 +3,12 @@ import { Role } from 'src/app/role/entities/role.entity';
 import { Station } from 'src/app/station/entities/station.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -19,6 +21,18 @@ export class User {
 
   @Column()
   lastName: string;
+
+  @Column({ select: false })
+  hashedPassword: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
