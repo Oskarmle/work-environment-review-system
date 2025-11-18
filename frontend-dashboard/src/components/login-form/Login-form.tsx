@@ -1,5 +1,6 @@
 import { Field, Form, Formik, type FormikHelpers } from 'formik';
 import styles from './login-form.module.css';
+import Button from '../button/Button';
 
 const LoginForm = () => {
   interface Values {
@@ -32,7 +33,7 @@ const LoginForm = () => {
             <Field
               id="email"
               name="email"
-              placeholder="john@acme.com"
+              placeholder="person@hbr.com"
               type="email"
               className={styles.input}
             />
@@ -51,7 +52,9 @@ const LoginForm = () => {
             />
           </div>
 
-          <button type="submit">Submit</button>
+          <div className={styles['button-box']}>
+            <Button text="Log Ind" type="reset" onClick={() => {}} size="lg" />
+          </div>
         </Form>
       </Formik>
     </>
