@@ -11,9 +11,11 @@ import { SectionFieldModule } from './app/section-field/section-field.module';
 import { SectionFieldResponseModule } from './app/section-field-response/section-field-response.module';
 import { AuthModule } from './app/auth/auth.module';
 import { AuthService } from './app/auth/auth.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dbConfig),
     StationModule,
     RoleModule,
