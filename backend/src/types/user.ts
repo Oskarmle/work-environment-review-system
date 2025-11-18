@@ -1,6 +1,6 @@
-import { Report } from 'src/app/report/entities/report.entity';
-import { Role } from 'src/app/role/entities/role.entity';
-import { Station } from 'src/app/station/entities/station.entity';
+import { Station } from './station';
+import { Report } from './report';
+import { Role } from './role';
 
 export type User = {
   id: string;
