@@ -23,7 +23,7 @@ export class User {
   lastName: string;
 
   @Column({ select: false })
-  password: string;
+  hashedPassword: string;
 
   @Column({ unique: true })
   email: string;
