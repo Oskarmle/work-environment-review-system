@@ -1,13 +1,13 @@
 import { Transform } from 'class-transformer';
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UserRole } from 'src/shared/enums/user-role';
+import { Role } from 'src/app/role/entities/role.entity';
+import { Station } from 'src/app/station/entities/station.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -29,11 +29,9 @@ export class CreateUserDto {
   @Transform(({ value }: { value: string }) => value.trim().toLowerCase())
   email: string;
 
-  @IsEnum(UserRole)
   @IsNotEmpty()
-  role: UserRole;
+  role: Role;
 
-  @IsString()
   @IsNotEmpty()
-  station: string;
+  station: Station;
 }
