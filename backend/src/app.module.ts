@@ -10,7 +10,6 @@ import { SectionModule } from './app/section/section.module';
 import { SectionFieldModule } from './app/section-field/section-field.module';
 import { SectionFieldResponseModule } from './app/section-field-response/section-field-response.module';
 import { AuthModule } from './app/auth/auth.module';
-import { AuthService } from './app/auth/auth.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -27,6 +26,5 @@ import { ConfigModule } from '@nestjs/config';
     SectionFieldResponseModule,
     AuthModule,
   ],
-  providers: [AuthService],
 })
 export class AppModule {}
