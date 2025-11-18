@@ -1,0 +1,5 @@
+.card {
+  background-color: var(--color-blue);
+  color: var(--color-light-grey);
+  padding: 40px 20px;
+}
