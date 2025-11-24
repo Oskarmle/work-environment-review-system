@@ -1,5 +1,7 @@
-// theme.ts
 import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+
+// FIXME: Theme is not working correctly for DatePicker components
 
 const theme = createTheme({
   palette: {
@@ -11,7 +13,6 @@ const theme = createTheme({
       main: '#e09e40',
       contrastText: '#ffffff',
     },
-    tertiary: { main: '#e3e4df' },
     error: {
       main: '#d32f2f',
     },
@@ -19,15 +20,49 @@ const theme = createTheme({
       default: '#fafafa',
     },
   },
+  components: {
+    MuiDatePicker: {
+      defaultProps: {
+        displayWeekNumber: true,
+      },
+    },
+    MuiDateCalendar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#f0f0f0',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: '#e3e4df',
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#e3e4df',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#e3e4df',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#e3e4df',
+          },
+        },
+        input: {
+          color: '#e3e4df',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: '#e3e4df', // light grey label
+          '&.Mui-focused': {
+            color: '#e3e4df', // light grey when focused
+          },
+        },
+      },
+    },
+  },
 });
-
-declare module '@mui/material/styles' {
-  interface Palette {
-    tertiary: Palette['primary'];
-  }
-  interface PaletteOptions {
-    tertiary?: PaletteOptions['primary'];
-  }
-}
 
 export default theme;
