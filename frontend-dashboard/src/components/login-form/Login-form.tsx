@@ -1,6 +1,6 @@
-import { Field, Form, Formik, type FormikHelpers } from 'formik';
+import { Form, Formik, type FormikHelpers } from 'formik';
 import styles from './login-form.module.css';
-import Button from '../button/Button';
+import { Button, TextField } from '@mui/material';
 
 const LoginForm = () => {
   interface Values {
@@ -12,6 +12,8 @@ const LoginForm = () => {
     // FIXME: Implement actual submission logic here
     console.log('Form values submitted:', values);
   };
+
+  // FIXME: Fix colors in the form fields to match the theme
 
   return (
     <>
@@ -45,18 +47,50 @@ const LoginForm = () => {
           }, 1500);
         }}
       >
-        {({ isSubmitting }) => (
+        {({
+          isSubmitting,
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+        }) => (
           <Form className={styles.form}>
             <div className={styles['field-box']}>
               <label htmlFor="email">
                 <h3>Email</h3>
               </label>
-              <Field
+              <TextField
                 id="email"
                 name="email"
-                placeholder="person@hbr.com"
+                color='primary'
+                // placeholder="person@hbr.com"
                 type="email"
-                className={styles.input}
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'background.default',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'background.default',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'background.default',
+                    },
+                  },
+                  '& label.Mui-focused': {
+                    color: 'background.default',
+                  },
+                  '& .MuiInputBase-input::placeholder': {
+                    color: 'background.default',
+                    opacity: 0.5,
+                  },
+                }}
               />
             </div>
 
@@ -64,23 +98,49 @@ const LoginForm = () => {
               <label htmlFor="password">
                 <h3>Adgangskode</h3>
               </label>
-              <Field
+              <TextField
                 id="password"
                 name="password"
-                placeholder="Adgangskode"
+                // placeholder="Adgangskode"
                 type="password"
-                className={styles.input}
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'background.default',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'background.default',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'background.default',
+                    },
+                  },
+                  '& label.Mui-focused': {
+                    color: 'background.default',
+                  },
+                  '& .MuiInputBase-input::placeholder': {
+                    color: 'background.default',
+                    opacity: 0.5,
+                  },
+                }}
               />
             </div>
 
             <div className={styles['button-box']}>
               <Button
-                text="Log Ind"
                 type="submit"
-                onClick={() => {}}
-                size="lg"
+                variant="contained"
+                color="secondary"
+                className={styles.button}
                 disabled={isSubmitting}
-              />
+              >
+                {isSubmitting ? 'Logger ind...' : 'Log ind'}
+              </Button>
             </div>
           </Form>
         )}
