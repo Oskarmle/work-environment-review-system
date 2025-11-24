@@ -1,5 +1,11 @@
-.createReview{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.createReview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.addDateAndUser {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
