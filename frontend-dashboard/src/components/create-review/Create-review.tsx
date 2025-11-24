@@ -4,8 +4,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
 import {
+  Button,
   Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -14,6 +17,7 @@ import {
   type SelectChangeEvent,
 } from '@mui/material';
 import type { User } from '../../types/user';
+import CustomCard from '../custom-card/Custom-card';
 
 const users: User[] = [
   {
@@ -81,17 +85,70 @@ const CreateReview = () => {
             onChange={handleChange}
             input={<OutlinedInput label="Vælg deltagere" />}
             renderValue={(selected) => selected.join(', ')}
-            // MenuProps={MenuProps}
           >
             {users.map((u) => (
               <MenuItem key={u.id} value={u.firstName + ' ' + u.lastName}>
-                <Checkbox checked={user.includes(u.firstName + ' ' + u.lastName)} />
+                <Checkbox
+                  checked={user.includes(u.firstName + ' ' + u.lastName)}
+                />
                 <ListItemText primary={u.firstName + ' ' + u.lastName} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </div>
+      <CustomCard title="Indledningsvist: Tjek af egenindsatsen">
+        <FormGroup className={styles.initialChecks}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Kender AMG sine opgaver?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Anmeldes ulykker og nærvedhændelser og følges der op på dem og bliver der labet interne undersøgelser?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Arbejder man løbende med relevante emner for AMGs område?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Er der fulgt op på relevante emner fra APV og Trivselsmåling?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Er der lavet handleplaner og kender medarbejderne til dem?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+        </FormGroup>
+      </CustomCard>
+      <CustomCard title="Fokus 2025">
+        <FormGroup className={styles.initialChecks}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Bliver ulykker og nærvedhændelser anmeldt?"
+            labelPlacement="start"
+            className={styles.checkbox}
+          />
+        </FormGroup>
+      </CustomCard>
+      <Button
+        type="submit"
+        variant="contained"
+        color="secondary"
+        className={styles.button}
+      >
+        Begynd rundering
+      </Button>
     </div>
   );
 };
