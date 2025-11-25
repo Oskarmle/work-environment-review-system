@@ -11,6 +11,7 @@ import { SectionFieldModule } from './app/section-field/section-field.module';
 import { SectionFieldResponseModule } from './app/section-field-response/section-field-response.module';
 import { AuthModule } from './app/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { InitialCheckModule } from './app/initial-check/initial-check.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     SectionFieldModule,
     SectionFieldResponseModule,
     AuthModule,
+    InitialCheckModule,
   ],
 })
 export class AppModule {}
