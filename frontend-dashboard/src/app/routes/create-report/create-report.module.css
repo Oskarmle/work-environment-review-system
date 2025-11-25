@@ -1,3 +1,22 @@
-.card {
-  max-width: 40%;
+.content {
+  display: flex;
+  flex: 1;
+  gap: 2rem;
+  height: 100%;
+}
+
+.card-right {
+  width: 60%;
+  height: 100%;
+}
+
+.card-right-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-left {
+  width: 40%;
+  height: 100%;
 }
