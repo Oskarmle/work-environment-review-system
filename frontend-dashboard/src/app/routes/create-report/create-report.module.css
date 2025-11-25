@@ -1,8 +1,8 @@
 .content {
   display: flex;
+  flex-direction: row;
   flex: 1;
   gap: 2rem;
-  height: 100%;
 }
 
 .card-right {
