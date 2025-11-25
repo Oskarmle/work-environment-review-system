@@ -5,10 +5,10 @@ import {
   Button,
   Card,
   CardContent,
-  Typography,
 } from '@mui/material';
 import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
+import { reviewSectionData } from '../../utils/mock-data';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
@@ -16,7 +16,7 @@ type ReviewSectionProps = {
   accordionItemProps?: AccordionItemProps[];
 };
 
-type AccordionPreFillProps = {
+export type AccordionPreFillProps = {
   whatToCheck: string;
   lawInspection: string;
   internalControl: string;
@@ -37,44 +37,13 @@ type AccordionItemProps = {
   response: AccordionResponseProps;
 };
 
-const dummyAccordionItem: AccordionPreFillProps[] = [
-  {
-    whatToCheck: 'Porte',
-    lawInspection: 'Ja.',
-    internalControl: 'Nej.',
-    howToCheck: 'Virker nødstop osv. Tjek datoen på mærkat',
-    responsible:
-      'Stationen står selv for service og små reperationer. Portene efterses af ekstern leverandør',
-  },
-  {
-    whatToCheck: 'Rumudsugning',
-    lawInspection: 'Ja.',
-    internalControl: 'Nej.',
-    howToCheck: 'Tjek datoen på mærkat',
-    responsible:
-      'Stationen står selv for service og små reperationer. Ventilationsanlæg efterses af ekstern leverandør',
-  },
-  {
-    whatToCheck: 'Stiger',
-    lawInspection: 'Ja.',
-    internalControl: 'Ja.',
-    howToCheck:
-      'Alle stiger skal tjekkes af særligt uddannet. Tjek datoen på stigerne',
-    responsible:
-      '12m stiger bliver efterset af værksted og påsætter mærkat. Stationen kontrollere selv stigen er efter ved bytning af køretøj osv.',
-  },
-  {
-    whatToCheck: 'El-værktøj',
-    lawInspection: 'Ja.',
-    internalControl: 'Ja.',
-    howToCheck: 'Alt el-værktøj skal tjekkes af særligt uddannet.',
-  },
-];
-
 const ReviewSection = ({
   selectedReview,
   setSelectedReview,
 }: ReviewSectionProps) => {
+  // Get the accordion items for the selected review section
+  const accordionItems = selectedReview ? reviewSectionData[selectedReview] || [] : [];
+
   return (
     <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
       <CardContent>
@@ -88,7 +57,7 @@ const ReviewSection = ({
         <div className={styles.content}>
           <h3>{selectedReview}</h3>
           <div className={styles.accordions}>
-            {dummyAccordionItem.map((prefill, idx) => (
+            {accordionItems.map((prefill, idx) => (
               <Accordion key={idx}>
                 <AccordionSummary
                   expandIcon={<ArrowDropDownIcon />}
