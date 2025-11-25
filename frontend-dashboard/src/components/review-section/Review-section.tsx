@@ -35,7 +35,6 @@ const ReviewSection = ({
   selectedReview,
   setSelectedReview,
 }: ReviewSectionProps) => {
-  // Get the accordion items for the selected review section
   const accordionItems = selectedReview
     ? reviewSectionData[selectedReview] || []
     : [];
