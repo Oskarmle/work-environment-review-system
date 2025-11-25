@@ -22,3 +22,10 @@
   width: 40%;
   height: 100%;
 }
+
+.card-right-button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: auto;
+}

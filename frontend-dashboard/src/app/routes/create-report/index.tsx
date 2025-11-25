@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
-import { Card, CardContent } from '@mui/material';
+import { Button, Card, CardContent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
 import styles from './create-report.module.css';
 import ReviewButton from '../../../components/review-button/Review-button';
@@ -37,6 +37,25 @@ function RouteComponent() {
                 />
               </div>
               <Line />
+              <div className={styles['card-right-button-group']}>
+                {/* FIXME: Add logic to buttons */}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={styles.button}
+                >
+                  Upload rundering
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="info"
+                  className={styles.button}
+                >
+                  Gem og fortsæt senere
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
