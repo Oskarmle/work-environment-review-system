@@ -10,6 +10,7 @@ import { Report } from 'src/app/report/entities/report.entity';
 import { Section } from 'src/app/section/entities/section.entity';
 import { SectionField } from 'src/app/section-field/entities/section-field.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
+import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ export const dbConfig: TypeOrmModuleOptions = {
     Section,
     SectionField,
     SectionFieldResponse,
+    InitialCheck,
   ],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
 };
