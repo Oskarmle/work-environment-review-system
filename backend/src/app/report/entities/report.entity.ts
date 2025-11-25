@@ -1,5 +1,6 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
+import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
 import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
@@ -20,26 +21,8 @@ export class Report {
   id: string;
 
   @Column()
-  doesAmgKnowTasks: boolean;
-
-  @Column()
-  reportAccidents: boolean;
-
-  @Column()
-  workWithRelevantAmgAreas: boolean;
-
-  @Column()
-  followUpApvAndWellBeing: boolean;
-
-  @Column()
-  actionPlanMade: boolean;
-
-  @Column()
   @Optional()
   comment?: boolean;
-
-  @Column()
-  revisedAt: Date;
 
   @Column()
   isCompleted: boolean;
@@ -63,4 +46,8 @@ export class Report {
   @ManyToMany(() => User, (user) => user.reports)
   @JoinTable()
   users: User[];
+
+  @ManyToMany(() => InitialCheck, (initialCheck) => initialCheck.reports)
+  @JoinTable()
+  initialChecks: InitialCheck[];
 }
