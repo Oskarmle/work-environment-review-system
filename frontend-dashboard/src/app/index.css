@@ -40,6 +40,12 @@ body {
   padding: 10px;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .login-page {
   display: flex;
   justify-content: center;
@@ -63,6 +69,7 @@ h3 {
 
 h4 {
   font-size: 18px;
+  font-weight: 400;
 }
 
 h5 {
