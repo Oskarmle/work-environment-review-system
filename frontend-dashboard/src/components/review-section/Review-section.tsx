@@ -13,7 +13,6 @@ import { reviewSectionData } from '../../utils/mock-data';
 type ReviewSectionProps = {
   selectedReview: string | null;
   setSelectedReview: (review: string | null) => void;
-  accordionItemProps?: AccordionItemProps[];
 };
 
 export type AccordionPreFillProps = {
@@ -32,17 +31,14 @@ type AccordionResponseProps = {
   isOkay?: boolean;
 };
 
-type AccordionItemProps = {
-  preFill: AccordionPreFillProps;
-  response: AccordionResponseProps;
-};
-
 const ReviewSection = ({
   selectedReview,
   setSelectedReview,
 }: ReviewSectionProps) => {
   // Get the accordion items for the selected review section
-  const accordionItems = selectedReview ? reviewSectionData[selectedReview] || [] : [];
+  const accordionItems = selectedReview
+    ? reviewSectionData[selectedReview] || []
+    : [];
 
   return (
     <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
