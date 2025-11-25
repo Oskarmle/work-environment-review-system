@@ -19,4 +19,8 @@ export class InitialCheckService {
     );
     return this.initialCheckRepository.save(initialCheck);
   }
+
+  async findAll(): Promise<InitialCheck[]> {
+    return this.initialCheckRepository.find();
+  }
 }
