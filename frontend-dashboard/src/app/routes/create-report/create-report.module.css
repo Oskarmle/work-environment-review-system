@@ -12,26 +12,7 @@
   height: 100%;
 }
 
-.card-right-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .card-left {
   width: 40%;
   height: 100%;
-}
-
-.card-right-button-group {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: auto;
-}
-
-.card-right-warning-list {
-  padding-left: 1rem;
-  padding-top: 1rem;
-  border-radius: 4px;
 }

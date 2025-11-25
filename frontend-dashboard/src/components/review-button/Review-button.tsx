@@ -12,7 +12,7 @@ type ReviewButtonProps = {
 const ReviewButton = ({ title, done, onClick }: ReviewButtonProps) => {
   return (
     <div className={styles.reviewButton}>
-      <div className={styles.intro}>
+      <div className={styles.intro} onClick={onClick}>
         <h4>{title}</h4>
         {!done ? (
           <CancelOutlinedIcon color="error" />
