@@ -1,0 +1,13 @@
+.card {
+  max-width: 40%;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button {
+  width: 50%;
+}

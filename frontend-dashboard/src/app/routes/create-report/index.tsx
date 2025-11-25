@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
 import { Card, CardContent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
@@ -6,7 +6,7 @@ import styles from './create-report.module.css';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   return (
