@@ -24,7 +24,7 @@ function RouteComponent() {
         </div>
         <div className={styles['card-right']}>
           <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
-            <CardContent>
+            <CardContent className={styles['card-right-content']}>
               <div className={styles['card-right-content']}>
                 {/* FIXME: Set done condition dependent on filled out content */}
                 <ReviewButton title="Bygning / inventar" done={false} />
@@ -56,6 +56,29 @@ function RouteComponent() {
                   Gem og fortsæt senere
                 </Button>
               </div>
+              <Card
+                sx={{
+                  bgcolor: 'secondary.main',
+                  color: 'secondary.contrastText',
+                }}
+              >
+                <CardContent>
+                  <div>
+                    <h4>
+                      Du kan ikke uploade runderingen før alle dele er
+                      gennemgået.
+                    </h4>
+                    <h4>Du mangler stadig at gennemgå</h4>
+                  </div>
+                  {/* FIXME: Set the list items dynamically based on review status for each part */}
+                  <ul className={styles['card-right-warning-list']}>
+                    <li>Bygning / inventar</li>
+                    <li>Kontorarbejdspladser</li>
+                    <li>Kemikalier</li>
+                    <li>Udeområde, Brandgårde, Øvelsesareal</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </CardContent>
           </Card>
         </div>

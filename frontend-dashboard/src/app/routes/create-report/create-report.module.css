@@ -29,3 +29,9 @@
   gap: 1rem;
   margin-top: auto;
 }
+
+.card-right-warning-list {
+  padding-left: 1rem;
+  padding-top: 1rem;
+  border-radius: 4px;
+}
