@@ -4,6 +4,7 @@ import { Card, CardContent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
 import styles from './create-report.module.css';
 import ReviewButton from '../../../components/review-button/Review-button';
+import Line from '../../../components/line/Line';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -35,6 +36,7 @@ function RouteComponent() {
                   done={false}
                 />
               </div>
+              <Line />
             </CardContent>
           </Card>
         </div>
