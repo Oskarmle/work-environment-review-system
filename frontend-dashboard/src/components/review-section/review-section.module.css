@@ -1,0 +1,11 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.accordion-content-prefill {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
