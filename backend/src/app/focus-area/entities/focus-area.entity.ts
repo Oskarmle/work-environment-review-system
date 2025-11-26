@@ -10,7 +10,7 @@ export class FocusArea {
   title: string;
 
   @Column()
-  year: Date;
+  year: number;
 
   @Column()
   isActive: boolean;
