@@ -9,6 +9,7 @@ import {
 import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
+import { Field, Form, Formik } from 'formik';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
@@ -69,7 +70,7 @@ const ReviewSection = ({
                     backgroundColor: 'background.default',
                   }}
                 >
-                  <div className={styles['accordion-content-prefill']}>
+                  <div className={styles['section-fields']}>
                     <div>
                       <h5>Lovpligtig eftersyn</h5>
                       <p>{sectionFields.lawInspection ? 'Ja.' : 'Nej.'}</p>
@@ -87,6 +88,37 @@ const ReviewSection = ({
                       <p>{sectionFields.responsibility}</p>
                     </div>
                   </div>
+                  <Formik
+                    initialValues={{
+                      comments: '',
+                      isOkay: true,
+                      isRelevant: false,
+                      image: null,
+                    }}
+                    onSubmit={async (values) => {
+                      console.log(values);
+                    }}
+                  >
+                    {/* FIXME: save all data to db, and add saving feature */}
+                    <Form>
+                      <div>
+                        <h5>Alt er okay</h5>
+                        <Field type="checkbox" name="isOkay" />
+                      </div>
+                      <div>
+                        <h5>Bemærkninger</h5>
+                        <Field as="textarea" name="comments" />
+                      </div>
+                      <div>
+                        <h5>Billede</h5>
+                        <Field type="file" name="image" />
+                      </div>
+                      <div>
+                        <h5>Skal ikke tjekkes</h5>
+                        <Field type="checkbox" name="isRelevant" />
+                      </div>
+                    </Form>
+                  </Formik>
                 </AccordionDetails>
               </Accordion>
             ))}

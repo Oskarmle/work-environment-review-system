@@ -4,8 +4,14 @@
   gap: 1rem;
 }
 
-.accordion-content-prefill {
+.section-fields {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.checkbox {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 0 !important;
 }
