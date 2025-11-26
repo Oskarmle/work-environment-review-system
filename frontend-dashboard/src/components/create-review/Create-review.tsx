@@ -20,6 +20,8 @@ import type { User } from '../../types/user';
 import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
 import type { InitialCheck } from '../../types/initial-check';
+import type { FocusArea } from '../../types/focus-area';
+import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
 
 const users: User[] = [
   {
@@ -66,8 +68,16 @@ const CreateReview = () => {
     setUser(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const { data, isLoading, isError } = useGetAllInitialChecks();
-  console.log('Initial Checks Data:', data);
+  const {
+    data: initialChecksData,
+    isLoading: initialChecksLoading,
+    isError: initialChecksError,
+  } = useGetAllInitialChecks();
+  const {
+    data: focusAreaData,
+    isLoading: focusAreaLoading,
+    isError: focusAreaError,
+  } = useGetActiveFocusArea();
 
   return (
     <div className={styles.createReview}>
@@ -105,9 +115,9 @@ const CreateReview = () => {
       <CustomCard title="Indledningsvist: Tjek af egenindsatsen">
         <FormGroup className={styles.initialChecks}>
           {/* FIXME: Add better error handling and error components */}
-          {isLoading && <p>Loading...</p>}
-          {isError && <p>Error loading checks</p>}
-          {data?.map((check: InitialCheck) => (
+          {initialChecksLoading && <p>Loading...</p>}
+          {initialChecksError && <p>Error loading checks</p>}
+          {initialChecksData?.map((check: InitialCheck) => (
             <FormControlLabel
               control={<Checkbox />}
               key={check.id}
@@ -118,14 +128,18 @@ const CreateReview = () => {
           ))}
         </FormGroup>
       </CustomCard>
-      <CustomCard title="Fokus 2025">
+      <CustomCard title={'Fokus ' + (focusAreaData?.year || '')}>
         <FormGroup className={styles.initialChecks}>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Bliver ulykker og nærvedhændelser anmeldt?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          />
+          {focusAreaLoading && <p>Loading...</p>}
+          {focusAreaError && <p>Error loading focus area</p>}
+          {focusAreaData && (
+            <FormControlLabel
+              control={<Checkbox />}
+              label={focusAreaData.title}
+              labelPlacement="start"
+              className={styles.checkbox}
+            />
+          )}
         </FormGroup>
       </CustomCard>
       <Button
