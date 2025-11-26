@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import type { InitialCheck } from '../types/initial-check';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const fetchAllInitialChecks = async () => {
+const fetchAllInitialChecks = async (): Promise<InitialCheck[]> => {
   const response = await axios.get(`${API_URL}/initial-check`);
   return response.data;
 };
