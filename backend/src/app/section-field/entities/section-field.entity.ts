@@ -25,8 +25,8 @@ export class SectionField {
   @Column()
   howToCheck: string;
 
-  @Column()
-  responsibility: string;
+  @Column({ nullable: true })
+  responsibility?: string;
 
   @ManyToOne(() => Section, (section) => section.sectionFields)
   section: Section;
