@@ -1,7 +1,7 @@
 import type { AccordionPreFillProps } from "../components/review-section/Review-section";
 
 export const reviewSectionData: Record<string, AccordionPreFillProps[]> = {
-  'Bygning / inventar': [
+  'Bygning / Inventar': [
     {
       whatToCheck: 'Porte',
       lawInspection: 'Ja.',
