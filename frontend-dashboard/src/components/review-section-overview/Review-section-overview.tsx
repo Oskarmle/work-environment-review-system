@@ -6,7 +6,7 @@ import { useGetSections } from '../../hooks/useGetSections';
 import { useState } from 'react';
 
 type ReviewSectionOverviewProps = {
-  onReviewClick: (title: string) => void;
+  onReviewClick: (sectionId: string) => void;
 };
 
 const ReviewSectionOverview = ({
@@ -36,7 +36,7 @@ const ReviewSectionOverview = ({
             <ReviewButton
               key={section.id}
               title={section.title}
-              onClick={() => onReviewClick(section.title)}
+              onClick={() => onReviewClick(section.id)}
               isNotRelevant={relevantStatus[section.id] || false}
               onRelevantChange={(status) =>
                 handleRelevantStatusChange(section.id, status)

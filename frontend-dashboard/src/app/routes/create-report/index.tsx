@@ -14,8 +14,8 @@ export const Route = createFileRoute('/create-report/')({
 function RouteComponent() {
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
 
-  const handleReviewClick = (title: string) => {
-    setSelectedReview(title);
+  const handleReviewClick = (sectionId: string) => {
+    setSelectedReview(sectionId);
   };
 
   return (

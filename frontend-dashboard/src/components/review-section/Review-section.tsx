@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
-import { reviewSectionData } from '../../utils/mock-data';
+import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
@@ -23,20 +23,15 @@ export type AccordionPreFillProps = {
   responsible?: string;
 };
 
-type AccordionResponseProps = {
-  comment?: string | null;
-  image?: File[] | null;
-  isCompleted: boolean;
-  isRelevant?: boolean;
-  isOkay?: boolean;
-};
-
 const ReviewSection = ({
   selectedReview,
   setSelectedReview,
 }: ReviewSectionProps) => {
+  const { data: sectionFields, isLoading, isError } = useGetSectionsFields();
+
   const accordionItems = selectedReview
-    ? reviewSectionData[selectedReview] || []
+    ? sectionFields?.filter((field) => field.section.id === selectedReview) ||
+      []
     : [];
 
   return (
@@ -50,9 +45,11 @@ const ReviewSection = ({
           Tilbage
         </Button>
         <div className={styles.content}>
-          <h3>{selectedReview}</h3>
+          <h3>{accordionItems[0]?.section.title}</h3>
           <div className={styles.accordions}>
-            {accordionItems.map((prefill, idx) => (
+            {isLoading && <p>Loading section fields...</p>}
+            {isError && <p>Error loading section fields.</p>}
+            {accordionItems.map((sectionFields, idx) => (
               <Accordion key={idx}>
                 <AccordionSummary
                   expandIcon={<ArrowDropDownIcon />}
@@ -65,7 +62,7 @@ const ReviewSection = ({
                     borderColor: 'divider',
                   }}
                 >
-                  <h4>{prefill.whatToCheck}</h4>
+                  <h4>{sectionFields.whatToCheck}</h4>
                 </AccordionSummary>
                 <AccordionDetails
                   sx={{
@@ -75,19 +72,19 @@ const ReviewSection = ({
                   <div className={styles['accordion-content-prefill']}>
                     <div>
                       <h5>Lovpligtig eftersyn</h5>
-                      <p>{prefill.lawInspection}</p>
+                      <p>{sectionFields.lawInspection ? 'Ja.' : 'Nej.'}</p>
                     </div>
                     <div>
                       <h5>Intern kontrol</h5>
-                      <p>{prefill.internalControl}</p>
+                      <p>{sectionFields.internalControl ? 'Ja.' : 'Nej.'}</p>
                     </div>
                     <div>
                       <h5>Hvordan/hvor tjekkes? (Mærkat/mappe)</h5>
-                      <p>{prefill.howToCheck}</p>
+                      <p>{sectionFields.howToCheck}</p>
                     </div>
                     <div>
                       <h5>Ansvar</h5>
-                      <p>{prefill.responsible}</p>
+                      <p>{sectionFields.responsibility}</p>
                     </div>
                   </div>
                 </AccordionDetails>
