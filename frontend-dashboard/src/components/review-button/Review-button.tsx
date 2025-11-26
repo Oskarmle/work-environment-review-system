@@ -5,16 +5,17 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 
 type ReviewButtonProps = {
   title: string;
-  done: boolean;
   onClick?: () => void;
+  isNotRelevant: boolean;
+  onRelevantChange: (isNotRelevant: boolean) => void;
 };
 
-const ReviewButton = ({ title, done, onClick }: ReviewButtonProps) => {
+const ReviewButton = ({ title, onClick, isNotRelevant, onRelevantChange }: ReviewButtonProps) => {
   return (
     <div className={styles.reviewButton}>
       <div className={styles.intro} onClick={onClick}>
         <h4>{title}</h4>
-        {!done ? (
+        {!isNotRelevant ? (
           <CancelOutlinedIcon color="error" />
         ) : (
           <CheckCircleOutlineOutlinedIcon color="success" />
@@ -26,6 +27,8 @@ const ReviewButton = ({ title, done, onClick }: ReviewButtonProps) => {
           label="Ikke relevant at gennemgå"
           labelPlacement="start"
           className={styles.checkbox}
+          checked={isNotRelevant}
+          onChange={(_, checked) => onRelevantChange(checked)}
         />
       </div>
     </div>
@@ -33,5 +36,3 @@ const ReviewButton = ({ title, done, onClick }: ReviewButtonProps) => {
 };
 
 export default ReviewButton;
-
-// {isSubmitting ? 'Logger ind...' : 'Log ind'}
