@@ -2,13 +2,7 @@ import styles from './create-review.module.css';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {
-  useState,
-  type JSXElementConstructor,
-  type ReactElement,
-  type ReactNode,
-  type ReactPortal,
-} from 'react';
+import { useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -122,36 +116,6 @@ const CreateReview = () => {
               className={styles.checkbox}
             />
           ))}
-          {/* <FormControlLabel
-            control={<Checkbox />}
-            label="Kender AMG sine opgaver?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Anmeldes ulykker og nærvedhændelser og følges der op på dem og bliver der labet interne undersøgelser?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Arbejder man løbende med relevante emner for AMGs område?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Er der fulgt op på relevante emner fra APV og Trivselsmåling?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Er der lavet handleplaner og kender medarbejderne til dem?"
-            labelPlacement="start"
-            className={styles.checkbox}
-          /> */}
         </FormGroup>
       </CustomCard>
       <CustomCard title="Fokus 2025">
