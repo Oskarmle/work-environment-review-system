@@ -16,6 +16,10 @@ export class FocusAreaService {
     return this.focusAreaRepository.save(focusArea);
   }
 
+  async findActiveOne(): Promise<FocusArea | null> {
+    return this.focusAreaRepository.findOneBy({ isActive: true });
+  }
+
   async findAll(): Promise<FocusArea[]> {
     return this.focusAreaRepository.find();
   }

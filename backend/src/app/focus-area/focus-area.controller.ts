@@ -18,4 +18,9 @@ export class FocusAreaController {
   async findAll(): Promise<FocusArea[]> {
     return this.focusAreaService.findAll();
   }
+
+  @Get('active')
+  async findActiveOne(): Promise<FocusArea | null> {
+    return this.focusAreaService.findActiveOne();
+  }
 }
