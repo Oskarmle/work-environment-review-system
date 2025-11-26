@@ -22,8 +22,8 @@ export class SectionField {
   @Column()
   internalControl: boolean;
 
-  @Column()
-  howToCheck: string;
+  @Column({ nullable: true })
+  howToCheck?: string;
 
   @Column({ nullable: true })
   responsibility?: string;

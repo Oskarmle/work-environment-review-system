@@ -14,7 +14,7 @@ export class CreateSectionFieldDto {
   @IsBoolean()
   internalControl: boolean;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   howToCheck: string;
 
