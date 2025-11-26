@@ -2,7 +2,13 @@ import styles from './create-review.module.css';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useState } from 'react';
+import {
+  useState,
+  type JSXElementConstructor,
+  type ReactElement,
+  type ReactNode,
+  type ReactPortal,
+} from 'react';
 import {
   Button,
   Checkbox,
@@ -18,6 +24,8 @@ import {
 } from '@mui/material';
 import type { User } from '../../types/user';
 import CustomCard from '../custom-card/Custom-card';
+import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
+import type { InitialCheck } from '../../types/initial-check';
 
 const users: User[] = [
   {
@@ -64,6 +72,9 @@ const CreateReview = () => {
     setUser(typeof value === 'string' ? value.split(',') : value);
   };
 
+  const { data, isLoading, isError } = useGetAllInitialChecks();
+  console.log('Initial Checks Data:', data);
+
   return (
     <div className={styles.createReview}>
       <div>
@@ -99,7 +110,19 @@ const CreateReview = () => {
       </div>
       <CustomCard title="Indledningsvist: Tjek af egenindsatsen">
         <FormGroup className={styles.initialChecks}>
-          <FormControlLabel
+          {/* FIXME: Add better error handling and error components */}
+          {isLoading && <p>Loading...</p>}
+          {isError && <p>Error loading checks</p>}
+          {data?.map((check: InitialCheck) => (
+            <FormControlLabel
+              control={<Checkbox />}
+              key={check.id}
+              label={check.checkName}
+              labelPlacement="start"
+              className={styles.checkbox}
+            />
+          ))}
+          {/* <FormControlLabel
             control={<Checkbox />}
             label="Kender AMG sine opgaver?"
             labelPlacement="start"
@@ -128,7 +151,7 @@ const CreateReview = () => {
             label="Er der lavet handleplaner og kender medarbejderne til dem?"
             labelPlacement="start"
             className={styles.checkbox}
-          />
+          /> */}
         </FormGroup>
       </CustomCard>
       <CustomCard title="Fokus 2025">
