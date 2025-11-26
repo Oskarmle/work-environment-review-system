@@ -2,7 +2,6 @@ import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
-import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
 import { User } from 'src/app/user/entities/user.entity';
 import {
@@ -38,10 +37,6 @@ export class Report {
     (sectionFieldResponse) => sectionFieldResponse.report,
   )
   sectionFieldResponses: SectionFieldResponse[];
-
-  @ManyToMany(() => Section, (section) => section.reports)
-  @JoinTable()
-  sections: Section[];
 
   @ManyToMany(() => User, (user) => user.reports)
   @JoinTable()

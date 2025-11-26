@@ -20,7 +20,6 @@ import type { User } from '../../types/user';
 import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
 import type { InitialCheck } from '../../types/initial-check';
-import type { FocusArea } from '../../types/focus-area';
 import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
 
 const users: User[] = [
