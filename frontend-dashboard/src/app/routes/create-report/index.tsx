@@ -27,12 +27,10 @@ function RouteComponent() {
   >({});
   const { data: sectionFields } = useGetSectionsFields();
 
-  // Derive section relevant status from field answers
   const sectionRelevantStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
 
     if (sectionFields) {
-      // Group fields by section
       const sectionGroups = sectionFields.reduce(
         (acc, field) => {
           const sectionId = field.section.id;
@@ -43,8 +41,6 @@ function RouteComponent() {
         {} as Record<string, string[]>,
       );
 
-      // Check if all fields in a section are completed
-      // A field is completed if: isOkay OR isNotRelevant OR has comments
       Object.entries(sectionGroups).forEach(([sectionId, fieldIds]) => {
         const allFieldsCompleted = fieldIds.every((fieldId) => {
           const answer = sectionFieldAnswers[fieldId];

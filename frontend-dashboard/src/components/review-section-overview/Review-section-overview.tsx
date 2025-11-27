@@ -59,7 +59,6 @@ const ReviewSectionOverview = ({
         </div>
         <Line />
         <div className={styles['card-right-button-group']}>
-          {/* FIXME: Add logic to buttons */}
           <Button
             type="submit"
             variant="contained"
