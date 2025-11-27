@@ -3,7 +3,7 @@ export type ReportResponse = {
   comment: string;
   imageUrl: string;
   isCompleted: boolean;
-  isRelevant?: boolean;
+  isNotRelevant?: boolean;
   isOkay?: boolean;
   sectionFieldId: string;
   reportId: string;

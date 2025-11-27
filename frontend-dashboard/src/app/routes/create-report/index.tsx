@@ -12,7 +12,7 @@ export type SectionFieldAnswer = {
   sectionFieldId: string;
   isOkay: boolean;
   comments: string;
-  image: File | null;
+  imageUrl: File | null;
   isNotRelevant: boolean;
 };
 
@@ -84,7 +84,7 @@ function RouteComponent() {
           sectionFieldId: fieldId,
           isOkay: false,
           comments: '',
-          image: null,
+          imageUrl: null,
           isNotRelevant: isNotRelevant,
         };
       });

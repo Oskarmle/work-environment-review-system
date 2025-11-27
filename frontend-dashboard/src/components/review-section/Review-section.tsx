@@ -62,7 +62,7 @@ const ReviewSection = ({
                 sectionFieldId: sectionField.id,
                 isOkay: false,
                 comments: '',
-                image: null,
+                imageUrl: null,
                 isNotRelevant: false,
               };
 
@@ -113,7 +113,7 @@ const ReviewSection = ({
                             ...currentAnswer,
                             isOkay: checked,
                             comments: checked ? '' : currentAnswer.comments,
-                            image: checked ? null : currentAnswer.image,
+                            imageUrl: checked ? null : currentAnswer.imageUrl,
                           });
                         }}
                         disabled={currentAnswer.isNotRelevant}
@@ -123,7 +123,7 @@ const ReviewSection = ({
                       initialValues={{
                         comments: currentAnswer.comments,
                         isNotRelevant: currentAnswer.isNotRelevant,
-                        image: currentAnswer.image,
+                        imageUrl: currentAnswer.imageUrl,
                       }}
                       enableReinitialize
                       onSubmit={async (values) => {
@@ -151,7 +151,7 @@ const ReviewSection = ({
                           <h5>Billede</h5>
                           <Field
                             type="file"
-                            name="image"
+                            name="imageUrl"
                             disabled={
                               currentAnswer.isOkay ||
                               currentAnswer.isNotRelevant
@@ -162,7 +162,7 @@ const ReviewSection = ({
                               const file = e.target.files?.[0] || null;
                               onAnswerChange(sectionField.id, {
                                 ...currentAnswer,
-                                image: file,
+                                imageUrl: file,
                               });
                             }}
                           />
@@ -191,7 +191,7 @@ const ReviewSection = ({
                           ...currentAnswer,
                           isNotRelevant: checked,
                           comments: checked ? '' : currentAnswer.comments,
-                          image: checked ? null : currentAnswer.image,
+                          imageUrl: checked ? null : currentAnswer.imageUrl,
                         });
                       }}
                       disabled={currentAnswer.isOkay}
