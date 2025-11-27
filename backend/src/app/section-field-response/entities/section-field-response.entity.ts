@@ -11,17 +11,15 @@ export class SectionFieldResponse {
   @Column()
   comment?: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Optional()
   imageUrl?: string;
 
   @Column()
-  @Optional()
-  isNotRelevant?: boolean;
+  isNotRelevant: boolean;
 
   @Column()
-  @Optional()
-  isOkay?: boolean;
+  isOkay: boolean;
 
   @ManyToOne(
     () => SectionField,
