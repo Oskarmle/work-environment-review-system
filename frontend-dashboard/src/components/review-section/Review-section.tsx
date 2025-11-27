@@ -12,13 +12,13 @@ import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
 import { Field, Form, Formik } from 'formik';
-import type { SectionFieldAnswer } from '../../app/routes/create-report';
+import type { ReportResponse } from '../../types/report-response';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
   setSelectedReview: (review: string | null) => void;
-  answers: Record<string, SectionFieldAnswer>;
-  onAnswerChange: (sectionFieldId: string, answer: SectionFieldAnswer) => void;
+  answers: Record<string, ReportResponse>;
+  onAnswerChange: (sectionFieldId: string, answer: ReportResponse) => void;
 };
 
 export type AccordionPreFillProps = {
@@ -112,7 +112,7 @@ const ReviewSection = ({
                           onAnswerChange(sectionField.id, {
                             ...currentAnswer,
                             isOkay: checked,
-                            comments: checked ? '' : currentAnswer.comments,
+                            comment: checked ? '' : currentAnswer.comment,
                             imageUrl: checked ? null : currentAnswer.imageUrl,
                           });
                         }}
@@ -121,7 +121,7 @@ const ReviewSection = ({
                     </div>
                     <Formik
                       initialValues={{
-                        comments: currentAnswer.comments,
+                        comment: currentAnswer.comment,
                         isNotRelevant: currentAnswer.isNotRelevant,
                         imageUrl: currentAnswer.imageUrl,
                       }}
@@ -142,7 +142,7 @@ const ReviewSection = ({
                             ) => {
                               onAnswerChange(sectionField.id, {
                                 ...currentAnswer,
-                                comments: e.target.value,
+                                comment: e.target.value,
                               });
                             }}
                           />
@@ -190,7 +190,7 @@ const ReviewSection = ({
                         onAnswerChange(sectionField.id, {
                           ...currentAnswer,
                           isNotRelevant: checked,
-                          comments: checked ? '' : currentAnswer.comments,
+                          comment: checked ? '' : currentAnswer.comment,
                           imageUrl: checked ? null : currentAnswer.imageUrl,
                         });
                       }}

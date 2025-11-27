@@ -1,10 +1,8 @@
 export type ReportResponse = {
-  id: string;
   comment: string;
-  imageUrl: string;
-  isCompleted: boolean;
-  isNotRelevant?: boolean;
-  isOkay?: boolean;
+  // FIXME: Update to be string when image is a Cloudinary URL
+  imageUrl: File | null;
+  isNotRelevant: boolean;
+  isOkay: boolean;
   sectionFieldId: string;
-  reportId: string;
 };

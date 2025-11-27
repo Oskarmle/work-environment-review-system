@@ -7,14 +7,7 @@ import { useState, useMemo } from 'react';
 import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
-
-export type SectionFieldAnswer = {
-  sectionFieldId: string;
-  isOkay: boolean;
-  comments: string;
-  imageUrl: File | null;
-  isNotRelevant: boolean;
-};
+import type { ReportResponse } from '../../../types/report-response';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -23,7 +16,7 @@ export const Route = createFileRoute('/create-report/')({
 function RouteComponent() {
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
-    Record<string, SectionFieldAnswer>
+    Record<string, ReportResponse>
   >({});
   const { data: sectionFields } = useGetSectionsFields();
 
@@ -49,7 +42,7 @@ function RouteComponent() {
           return (
             answer.isOkay ||
             answer.isNotRelevant ||
-            (answer.comments && answer.comments.trim().length > 0)
+            (answer.comment && answer.comment.trim().length > 0)
           );
         });
         status[sectionId] = allFieldsCompleted && fieldIds.length > 0;
@@ -65,7 +58,7 @@ function RouteComponent() {
 
   const handleAnswerChange = (
     sectionFieldId: string,
-    answer: SectionFieldAnswer,
+    answer: ReportResponse,
   ) => {
     setSectionFieldAnswers((prev) => ({
       ...prev,
@@ -78,12 +71,12 @@ function RouteComponent() {
     isNotRelevant: boolean,
   ) => {
     setSectionFieldAnswers((prev) => {
-      const updates: Record<string, SectionFieldAnswer> = {};
+      const updates: Record<string, ReportResponse> = {};
       sectionFieldIds.forEach((fieldId) => {
         updates[fieldId] = {
           sectionFieldId: fieldId,
           isOkay: false,
-          comments: '',
+          comment: '',
           imageUrl: null,
           isNotRelevant: isNotRelevant,
         };
