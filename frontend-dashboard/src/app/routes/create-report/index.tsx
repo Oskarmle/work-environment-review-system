@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, type SelectChangeEvent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
 import styles from './create-report.module.css';
 import { useState, useMemo } from 'react';
@@ -8,6 +8,9 @@ import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
 import type { ReportResponse } from '../../../types/report-response';
+import { useGetActiveFocusArea } from '../../../hooks/useGetFocusArea';
+import { useCreateReport } from '../../../hooks/useCreateReport';
+import type { Dayjs } from 'dayjs';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -19,6 +22,15 @@ function RouteComponent() {
     Record<string, ReportResponse>
   >({});
   const { data: sectionFields } = useGetSectionsFields();
+
+  const [user, setUser] = useState<string[]>([]);
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [initialChecks, setInitialChecks] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [focusAreaChecked, setFocusAreaChecked] = useState<boolean>(false);
+  const [comment, setComment] = useState<string>('');
+  const [reportId, setReportId] = useState<string | null>(null);
 
   const sectionRelevantStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
@@ -85,6 +97,59 @@ function RouteComponent() {
     });
   };
 
+  const {
+    data: focusAreaData,
+    // isLoading: focusAreaLoading,
+    // isError: focusAreaError,
+  } = useGetActiveFocusArea();
+
+  const handleBeginReview = () => {
+    if (!date || !focusAreaData || !focusAreaChecked || !initialChecks) {
+      console.error('Missing required fields');
+      return;
+    }
+
+    // FIXME: Replace with actual user and station IDs from user data
+    const userId = '4dd4691c-d882-4830-8573-d812c29dae43';
+    const stationId = '3a83fd64-c801-47a3-b0b3-fbb3d9240a13';
+
+    const reportData = {
+      isCompleted: false,
+      focusAreaId: focusAreaData.id,
+      stationId: stationId,
+      comment: comment,
+      reportBeganAt: date.format('YYYY-MM-DD'),
+      userId: userId,
+    };
+
+    mutation.mutate(reportData, {
+      onSuccess: (data) => {
+        console.log('Report created successfully');
+        const createdReportId = data.id;
+        setReportId(createdReportId);
+
+        // TODO: Now send sectionFieldResponses with createdReportId
+        console.log('Created report ID:', createdReportId);
+
+        setDate(null);
+        setUser([]);
+        setInitialChecks({});
+        setFocusAreaChecked(false);
+        setComment('');
+        alert('Rundering startet!');
+      },
+    });
+  };
+
+  const handleChange = (event: SelectChangeEvent<typeof user>) => {
+    const {
+      target: { value },
+    } = event;
+    setUser(typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const mutation = useCreateReport();
+
   const handleSaveProgress = () => {
     console.log('All section field answers:', sectionFieldAnswers);
     // FIXME: Save progress with isCompleted = false
@@ -102,7 +167,19 @@ function RouteComponent() {
         <div className={styles['card-left']}>
           <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
             <CardContent>
-              <CreateReview />
+              <CreateReview
+                handleBeginReview={handleBeginReview}
+                date={date}
+                setDate={setDate}
+                user={user}
+                handleChange={handleChange}
+                initialChecks={initialChecks}
+                setInitialChecks={setInitialChecks}
+                focusAreaChecked={focusAreaChecked}
+                setFocusAreaChecked={setFocusAreaChecked}
+                comment={comment}
+                setComment={setComment}
+              />
             </CardContent>
           </Card>
         </div>
