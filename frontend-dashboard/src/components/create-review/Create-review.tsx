@@ -21,44 +21,51 @@ import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
 import type { InitialCheck } from '../../types/initial-check';
 import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
+import { useGetUsers } from '../../hooks/useGetUsers';
 
-const users: User[] = [
-  {
-    id: 'd352e8b2-5c6d-4f01-8346-fd8429f5bdce',
-    firstName: 'Omar',
-    lastName: 'Lee',
-    email: 'omar.lee@example.com',
-    roleId: 'role-1234',
-    stationId: 'station-5678',
-  },
-  {
-    id: 'a123b456-c789-0def-1234-56789abcdef0',
-    firstName: 'Anna',
-    lastName: 'Hansen',
-    email: 'anna.hansen@example.com',
-    roleId: 'role-2345',
-    stationId: 'station-6789',
-  },
-  {
-    id: 'b234c567-d890-1ef2-3456-789abcdef012',
-    firstName: 'Peter',
-    lastName: 'Jensen',
-    email: 'peter.jensen@example.com',
-    roleId: 'role-3456',
-    stationId: 'station-7890',
-  },
-  {
-    id: 'c345d678-e901-2f34-5678-90abcdef1234',
-    firstName: 'Mette',
-    lastName: 'Nielsen',
-    email: 'mette.nielsen@example.com',
-    roleId: 'role-4567',
-    stationId: 'station-8901',
-  },
-];
+// const users: User[] = [
+//   {
+//     id: 'd352e8b2-5c6d-4f01-8346-fd8429f5bdce',
+//     firstName: 'Omar',
+//     lastName: 'Lee',
+//     email: 'omar.lee@example.com',
+//     roleId: 'role-1234',
+//     stationId: 'station-5678',
+//   },
+//   {
+//     id: 'a123b456-c789-0def-1234-56789abcdef0',
+//     firstName: 'Anna',
+//     lastName: 'Hansen',
+//     email: 'anna.hansen@example.com',
+//     roleId: 'role-2345',
+//     stationId: 'station-6789',
+//   },
+//   {
+//     id: 'b234c567-d890-1ef2-3456-789abcdef012',
+//     firstName: 'Peter',
+//     lastName: 'Jensen',
+//     email: 'peter.jensen@example.com',
+//     roleId: 'role-3456',
+//     stationId: 'station-7890',
+//   },
+//   {
+//     id: 'c345d678-e901-2f34-5678-90abcdef1234',
+//     firstName: 'Mette',
+//     lastName: 'Nielsen',
+//     email: 'mette.nielsen@example.com',
+//     roleId: 'role-4567',
+//     stationId: 'station-8901',
+//   },
+// ];
 
 const CreateReview = () => {
   const [user, setUser] = useState<string[]>([]);
+
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useGetUsers();
 
   const handleChange = (event: SelectChangeEvent<typeof user>) => {
     const {
@@ -100,7 +107,9 @@ const CreateReview = () => {
             input={<OutlinedInput label="Vælg deltagere" />}
             renderValue={(selected) => selected.join(', ')}
           >
-            {users.map((u) => (
+            {usersLoading && <MenuItem disabled>Loading...</MenuItem>}
+            {usersError && <MenuItem disabled>Error loading users</MenuItem>}
+            {users?.map((u) => (
               <MenuItem key={u.id} value={u.firstName + ' ' + u.lastName}>
                 <Checkbox
                   checked={user.includes(u.firstName + ' ' + u.lastName)}
