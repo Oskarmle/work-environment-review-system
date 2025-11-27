@@ -3,33 +3,46 @@ import ReviewButton from '../review-button/Review-button';
 import Line from '../line/Line';
 import styles from './review-section-overview.module.css';
 import { useGetSections } from '../../hooks/useGetSections';
-import { useState } from 'react';
+import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
 
 type ReviewSectionOverviewProps = {
   onReviewClick: (sectionId: string) => void;
+  onSaveProgress: () => void;
+  onSubmitReport: () => void;
+  onSectionNotRelevant: (
+    sectionFieldIds: string[],
+    isNotRelevant: boolean,
+  ) => void;
+  sectionRelevantStatus: Record<string, boolean>;
 };
 
 const ReviewSectionOverview = ({
   onReviewClick,
+  onSaveProgress,
+  onSubmitReport,
+  onSectionNotRelevant,
+  sectionRelevantStatus,
 }: ReviewSectionOverviewProps) => {
-  const [relevantStatus, setRelevantStatus] = useState<Record<string, boolean>>(
-    {},
-  );
   const { data, isLoading, isError } = useGetSections();
+  const { data: sectionFields } = useGetSectionsFields();
 
   const handleRelevantStatusChange = (sectionId: string, status: boolean) => {
-    setRelevantStatus((prev) => ({ ...prev, [sectionId]: status }));
+    const fieldIds =
+      sectionFields
+        ?.filter((field) => field.section.id === sectionId)
+        .map((field) => field.id) || [];
+
+    onSectionNotRelevant(fieldIds, status);
   };
 
   const incompleteSections = data?.filter(
-    (section) => !relevantStatus[section.id],
+    (section) => !sectionRelevantStatus[section.id],
   );
 
   return (
     <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
       <CardContent className={styles['card-right-content']}>
         <div className={styles['card-right-content']}>
-          {/* FIXME: Set done condition dependent on filled out content or not relevant = true */}
           {isLoading && <p>Loading sections...</p>}
           {isError && <p>Error loading sections.</p>}
           {data?.map((section) => (
@@ -37,7 +50,7 @@ const ReviewSectionOverview = ({
               key={section.id}
               title={section.title}
               onClick={() => onReviewClick(section.id)}
-              isNotRelevant={relevantStatus[section.id] || false}
+              isNotRelevant={sectionRelevantStatus[section.id] || false}
               onRelevantChange={(status) =>
                 handleRelevantStatusChange(section.id, status)
               }
@@ -53,6 +66,7 @@ const ReviewSectionOverview = ({
             color="secondary"
             className={styles.button}
             disabled={incompleteSections && incompleteSections.length > 0}
+            onClick={onSubmitReport}
           >
             Upload rundering
           </Button>
@@ -61,9 +75,7 @@ const ReviewSectionOverview = ({
             variant="contained"
             color="info"
             className={styles.button}
-            onClick={() =>
-              console.log('Gem og fortsæt senere clicked', incompleteSections)
-            }
+            onClick={onSaveProgress}
           >
             Gem og fortsæt senere
           </Button>
