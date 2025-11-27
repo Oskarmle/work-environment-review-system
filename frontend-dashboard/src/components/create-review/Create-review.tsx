@@ -19,10 +19,13 @@ import {
 } from '@mui/material';
 import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
+import type { CreateReport } from '../../types/report';
 import type { InitialCheck } from '../../types/initial-check';
 import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
 import { useGetUsers } from '../../hooks/useGetUsers';
 import type { Dayjs } from 'dayjs';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 const CreateReview = () => {
   const [user, setUser] = useState<string[]>([]);
@@ -57,13 +60,45 @@ const CreateReview = () => {
     isError: focusAreaError,
   } = useGetActiveFocusArea();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const mutation = useMutation({
+    mutationFn: async (reportData: CreateReport) => {
+      const response = await axios.post(`${API_URL}/report`, reportData);
+
+      return response.data;
+    },
+    onSuccess: () => {
+      console.log('Report created successfully');
+      setDate(null);
+      setUser([]);
+      setInitialChecks({});
+      setFocusAreaChecked(false);
+      setComment('');
+      alert('Rundering startet!');
+    },
+  });
+
   const handleBeginReview = () => {
-    console.log('Date:', date);
-    console.log('Users:', user);
-    console.log('Initial checks:', initialChecks);
-    console.log('Focus area checked:', focusAreaData);
-    console.log('Comment:', comment);
-    console.log(user, date, initialChecks, focusAreaData, comment);
+    if (!date || !focusAreaData || !focusAreaChecked || !initialChecks) {
+      console.error('Missing required fields');
+      return;
+    }
+
+    // FIXME: Replace with actual user and station IDs from user data
+    const userId = '4dd4691c-d882-4830-8573-d812c29dae43';
+    const stationId = '3a83fd64-c801-47a3-b0b3-fbb3d9240a13';
+
+    const reportData = {
+      isCompleted: false,
+      focusAreaId: focusAreaData.id,
+      stationId: stationId,
+      comment: comment,
+      reportBeganAt: date.format('YYYY-MM-DD'),
+      userId: userId,
+    };
+
+    mutation.mutate(reportData);
   };
 
   return (

@@ -26,4 +26,8 @@ export class CreateReportDto {
   @IsNotEmpty()
   @IsString()
   stationId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

@@ -1,6 +1,8 @@
-export type report = {
-  comment?: string;
-  focusId: string;
-  stationId: string;
+export type CreateReport = {
   isCompleted: boolean;
+  focusAreaId: string;
+  stationId: string;
+  comment?: string;
+  reportBeganAt: string;
+  userId: string;
 };
