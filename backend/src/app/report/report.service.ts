@@ -12,7 +12,13 @@ export class ReportService {
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report> {
-    const report = this.reportRepository.create(createReportDto);
+    const { stationId, focusAreaId, ...reportData } = createReportDto;
+
+    const report = this.reportRepository.create({
+      ...reportData,
+      station: { id: stationId },
+      focusArea: { id: focusAreaId },
+    });
     return this.reportRepository.save(report);
   }
 
