@@ -5,4 +5,5 @@ export type ReportResponse = {
   isNotRelevant: boolean;
   isOkay: boolean;
   sectionFieldId: string;
+  reportId: string;
 };
