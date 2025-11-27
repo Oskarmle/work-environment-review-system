@@ -21,7 +21,7 @@ export class Report {
 
   @Column()
   @Optional()
-  comment?: boolean;
+  comment?: string;
 
   @Column()
   isCompleted: boolean;
