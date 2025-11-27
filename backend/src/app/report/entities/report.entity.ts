@@ -5,12 +5,14 @@ import { Station } from 'src/app/station/entities/station.entity';
 import { User } from 'src/app/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -27,6 +29,15 @@ export class Report {
 
   @ManyToOne(() => FocusArea, (focusArea) => focusArea.reports)
   focusArea: FocusArea;
+
+  @Column()
+  reportBeganAt: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => Station, (station) => station.reports)
   station: Station;

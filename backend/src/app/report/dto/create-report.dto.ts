@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateReportDto {
   @IsOptional()
@@ -8,6 +14,10 @@ export class CreateReportDto {
   @IsBoolean()
   @IsNotEmpty()
   IsCompleted: boolean;
+
+  @IsDate()
+  @IsNotEmpty()
+  reportBeganAt: Date;
 
   @IsNotEmpty()
   @IsString()
