@@ -17,7 +17,7 @@ export class SectionFieldResponse {
 
   @Column()
   @Optional()
-  isRelevant?: boolean;
+  isNotRelevant?: boolean;
 
   @Column()
   @Optional()
