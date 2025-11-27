@@ -1,5 +1,4 @@
-import { Report } from 'src/app/report/entities/report.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class InitialCheck {
@@ -8,7 +7,4 @@ export class InitialCheck {
 
   @Column()
   checkName: string;
-
-  @ManyToMany(() => Report, (report) => report.initialChecks)
-  reports: Report[];
 }
