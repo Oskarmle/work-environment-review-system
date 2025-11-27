@@ -14,6 +14,7 @@ type ReviewSectionOverviewProps = {
     isNotRelevant: boolean,
   ) => void;
   sectionRelevantStatus: Record<string, boolean>;
+  reportId?: string | null;
 };
 
 const ReviewSectionOverview = ({
@@ -22,6 +23,7 @@ const ReviewSectionOverview = ({
   onSubmitReport,
   onSectionNotRelevant,
   sectionRelevantStatus,
+  reportId,
 }: ReviewSectionOverviewProps) => {
   const { data, isLoading, isError } = useGetSections();
   const { data: sectionFields } = useGetSectionsFields();
@@ -64,7 +66,9 @@ const ReviewSectionOverview = ({
             variant="contained"
             color="secondary"
             className={styles.button}
-            disabled={incompleteSections && incompleteSections.length > 0}
+            disabled={
+              incompleteSections && incompleteSections.length > 0 && !reportId
+            }
             onClick={onSubmitReport}
           >
             Upload rundering
@@ -75,6 +79,7 @@ const ReviewSectionOverview = ({
             color="info"
             className={styles.button}
             onClick={onSaveProgress}
+            disabled={!reportId}
           >
             Gem og fortsæt senere
           </Button>

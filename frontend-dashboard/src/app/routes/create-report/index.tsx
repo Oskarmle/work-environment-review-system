@@ -11,6 +11,7 @@ import type { ReportResponse } from '../../../types/report-response';
 import { useGetActiveFocusArea } from '../../../hooks/useGetFocusArea';
 import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
+import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -83,25 +84,30 @@ function RouteComponent() {
     isNotRelevant: boolean,
   ) => {
     setSectionFieldAnswers((prev) => {
-      const updates: Record<string, ReportResponse> = {};
-      sectionFieldIds.forEach((fieldId) => {
-        updates[fieldId] = {
-          sectionFieldId: fieldId,
-          isOkay: false,
-          comment: '',
-          imageUrl: null,
-          isNotRelevant: isNotRelevant,
-        };
-      });
-      return { ...prev, ...updates };
+      if (isNotRelevant) {
+        const updates: Record<string, ReportResponse> = {};
+        sectionFieldIds.forEach((fieldId) => {
+          updates[fieldId] = {
+            sectionFieldId: fieldId,
+            isOkay: false,
+            comment: '',
+            imageUrl: null,
+            isNotRelevant: true,
+            reportId: reportId ?? '',
+          };
+        });
+        return { ...prev, ...updates };
+      } else {
+        const newAnswers = { ...prev };
+        sectionFieldIds.forEach((fieldId) => {
+          delete newAnswers[fieldId];
+        });
+        return newAnswers;
+      }
     });
   };
 
-  const {
-    data: focusAreaData,
-    // isLoading: focusAreaLoading,
-    // isError: focusAreaError,
-  } = useGetActiveFocusArea();
+  const { data: focusAreaData } = useGetActiveFocusArea();
 
   const handleBeginReview = () => {
     if (!date || !focusAreaData || !focusAreaChecked || !initialChecks) {
@@ -122,14 +128,11 @@ function RouteComponent() {
       userId: userId,
     };
 
-    mutation.mutate(reportData, {
+    createReportMutation.mutate(reportData, {
       onSuccess: (data) => {
         console.log('Report created successfully');
         const createdReportId = data.id;
         setReportId(createdReportId);
-
-        // TODO: Now send sectionFieldResponses with createdReportId
-        console.log('Created report ID:', createdReportId);
 
         setDate(null);
         setUser([]);
@@ -148,11 +151,22 @@ function RouteComponent() {
     setUser(typeof value === 'string' ? value.split(',') : value);
   };
 
-  const mutation = useCreateReport();
+  const createReportMutation = useCreateReport();
+
+  const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
 
   const handleSaveProgress = () => {
     console.log('All section field answers:', sectionFieldAnswers);
-    // FIXME: Save progress with isCompleted = false
+    console.log('report id', reportId);
+
+    const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
+
+    createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
+      onSuccess: () => {
+        console.log('Section field responses saved successfully');
+        alert('Fremdrift gemt!');
+      },
+    });
   };
 
   const handleSubmitReport = () => {
@@ -191,6 +205,7 @@ function RouteComponent() {
               onSectionNotRelevant={handleSectionNotRelevant}
               sectionRelevantStatus={sectionRelevantStatus}
               onSubmitReport={handleSubmitReport}
+              reportId={reportId}
             />
           ) : (
             <ReviewSection
