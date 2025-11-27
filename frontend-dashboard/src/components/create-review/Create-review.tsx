@@ -14,52 +14,24 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  TextareaAutosize,
   type SelectChangeEvent,
 } from '@mui/material';
-import type { User } from '../../types/user';
 import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
 import type { InitialCheck } from '../../types/initial-check';
 import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
 import { useGetUsers } from '../../hooks/useGetUsers';
-
-// const users: User[] = [
-//   {
-//     id: 'd352e8b2-5c6d-4f01-8346-fd8429f5bdce',
-//     firstName: 'Omar',
-//     lastName: 'Lee',
-//     email: 'omar.lee@example.com',
-//     roleId: 'role-1234',
-//     stationId: 'station-5678',
-//   },
-//   {
-//     id: 'a123b456-c789-0def-1234-56789abcdef0',
-//     firstName: 'Anna',
-//     lastName: 'Hansen',
-//     email: 'anna.hansen@example.com',
-//     roleId: 'role-2345',
-//     stationId: 'station-6789',
-//   },
-//   {
-//     id: 'b234c567-d890-1ef2-3456-789abcdef012',
-//     firstName: 'Peter',
-//     lastName: 'Jensen',
-//     email: 'peter.jensen@example.com',
-//     roleId: 'role-3456',
-//     stationId: 'station-7890',
-//   },
-//   {
-//     id: 'c345d678-e901-2f34-5678-90abcdef1234',
-//     firstName: 'Mette',
-//     lastName: 'Nielsen',
-//     email: 'mette.nielsen@example.com',
-//     roleId: 'role-4567',
-//     stationId: 'station-8901',
-//   },
-// ];
+import type { Dayjs } from 'dayjs';
 
 const CreateReview = () => {
   const [user, setUser] = useState<string[]>([]);
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [initialChecks, setInitialChecks] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [focusAreaChecked, setFocusAreaChecked] = useState<boolean>(false);
+  const [comment, setComment] = useState<string>('');
 
   const {
     data: users,
@@ -85,6 +57,15 @@ const CreateReview = () => {
     isError: focusAreaError,
   } = useGetActiveFocusArea();
 
+  const handleBeginReview = () => {
+    console.log('Date:', date);
+    console.log('Users:', user);
+    console.log('Initial checks:', initialChecks);
+    console.log('Focus area checked:', focusAreaData);
+    console.log('Comment:', comment);
+    console.log(user, date, initialChecks, focusAreaData, comment);
+  };
+
   return (
     <div className={styles.createReview}>
       <div>
@@ -94,7 +75,7 @@ const CreateReview = () => {
       </div>
       <div className={styles.addDateAndUser}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Vælg dato" />
+          <DatePicker label="Vælg dato" value={date} onChange={setDate} />
         </LocalizationProvider>
         <FormControl>
           <InputLabel>Vælg deltagere</InputLabel>
@@ -127,7 +108,17 @@ const CreateReview = () => {
           {initialChecksError && <p>Error loading checks</p>}
           {initialChecksData?.map((check: InitialCheck) => (
             <FormControlLabel
-              control={<Checkbox />}
+              control={
+                <Checkbox
+                  checked={initialChecks[check.id] || false}
+                  onChange={(e) =>
+                    setInitialChecks((prev) => ({
+                      ...prev,
+                      [check.id]: e.target.checked,
+                    }))
+                  }
+                />
+              }
               key={check.id}
               label={check.checkName}
               labelPlacement="start"
@@ -142,7 +133,12 @@ const CreateReview = () => {
           {focusAreaError && <p>Error loading focus area</p>}
           {focusAreaData && (
             <FormControlLabel
-              control={<Checkbox />}
+              control={
+                <Checkbox
+                  checked={focusAreaChecked}
+                  onChange={(e) => setFocusAreaChecked(e.target.checked)}
+                />
+              }
               label={focusAreaData.title}
               labelPlacement="start"
               className={styles.checkbox}
@@ -150,11 +146,19 @@ const CreateReview = () => {
           )}
         </FormGroup>
       </CustomCard>
+      <TextareaAutosize
+        minRows={4}
+        placeholder="Evt. bemærkninger til runderingen"
+        className={styles.textarea}
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
       <Button
         type="submit"
         variant="contained"
         color="secondary"
         className={styles.button}
+        onClick={handleBeginReview}
       >
         Begynd rundering
       </Button>
