@@ -5,11 +5,14 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
 import { Field, Form, Formik } from 'formik';
+import { useState } from 'react';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
@@ -28,6 +31,9 @@ const ReviewSection = ({
   selectedReview,
   setSelectedReview,
 }: ReviewSectionProps) => {
+  const [isOkay, setIsOkay] = useState(false);
+  const [isRelevant, setIsRelevant] = useState(false);
+
   const { data: sectionFields, isLoading, isError } = useGetSectionsFields();
 
   const accordionItems = selectedReview
@@ -58,9 +64,6 @@ const ReviewSection = ({
                   id={`panel-${idx}-header`}
                   sx={{
                     backgroundColor: 'background.default',
-                    borderRadius: 1,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
                   }}
                 >
                   <h4>{sectionFields.whatToCheck}</h4>
@@ -88,10 +91,20 @@ const ReviewSection = ({
                       <p>{sectionFields.responsibility}</p>
                     </div>
                   </div>
+                  <div>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Alt er okay"
+                      labelPlacement="start"
+                      className={styles.checkbox}
+                      checked={isOkay}
+                      onChange={(_, checked) => setIsOkay(checked)}
+                      disabled={isRelevant}
+                    />
+                  </div>
                   <Formik
                     initialValues={{
                       comments: '',
-                      isOkay: true,
                       isRelevant: false,
                       image: null,
                     }}
@@ -102,23 +115,40 @@ const ReviewSection = ({
                     {/* FIXME: save all data to db, and add saving feature */}
                     <Form>
                       <div>
-                        <h5>Alt er okay</h5>
-                        <Field type="checkbox" name="isOkay" />
-                      </div>
-                      <div>
                         <h5>Bemærkninger</h5>
-                        <Field as="textarea" name="comments" />
+                        <Field
+                          as="textarea"
+                          name="comments"
+                          disabled={isOkay}
+                        />
                       </div>
                       <div>
                         <h5>Billede</h5>
-                        <Field type="file" name="image" />
+                        <Field
+                          type="file"
+                          name="image"
+                          disabled={isOkay || isRelevant}
+                        />
                       </div>
                       <div>
                         <h5>Skal ikke tjekkes</h5>
-                        <Field type="checkbox" name="isRelevant" />
+                        <Field
+                          type="checkbox"
+                          name="isRelevant"
+                          disabled={isOkay || isRelevant}
+                        />
                       </div>
                     </Form>
                   </Formik>
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label="Skal ikke tjekkes"
+                    labelPlacement="start"
+                    className={styles.checkbox}
+                    checked={isRelevant}
+                    onChange={(_, checked) => setIsRelevant(checked)}
+                    disabled={isOkay}
+                  />
                 </AccordionDetails>
               </Accordion>
             ))}
