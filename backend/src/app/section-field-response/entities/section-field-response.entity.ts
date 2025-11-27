@@ -16,9 +16,6 @@ export class SectionFieldResponse {
   imageUrl?: string;
 
   @Column()
-  isCompleted: boolean;
-
-  @Column()
   @Optional()
   isRelevant?: boolean;
 
