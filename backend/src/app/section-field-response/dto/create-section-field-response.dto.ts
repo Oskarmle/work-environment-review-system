@@ -6,10 +6,6 @@ export class CreateSectionFieldResponseDto {
   comment?: string;
 
   @IsOptional()
-  @IsString()
-  imageUrl?: string;
-
-  @IsOptional()
   @IsBoolean()
   isNotRelevant?: boolean;
 
