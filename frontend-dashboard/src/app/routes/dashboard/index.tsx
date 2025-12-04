@@ -8,9 +8,9 @@ export const Route = createFileRoute('/dashboard/')({
 
 function RouteComponent() {
   return (
-    <div className={styles.dashboard}>
+    <div>
       <Logo />
-      <div></div>
+      <div className={styles.dashboard}></div>
     </div>
   );
 }
