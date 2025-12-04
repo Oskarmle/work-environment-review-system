@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import { Report } from 'src/app/report/entities/report.entity';
 import { SectionField } from 'src/app/section-field/entities/section-field.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -11,20 +10,23 @@ export class SectionFieldResponse {
   @Column()
   comment?: string;
 
-  @Column()
-  @Optional()
-  imageUrl?: string;
+  @Column({ type: 'bytea', nullable: true })
+  imageData?: Buffer;
+
+  @Column({ nullable: true })
+  imageMimeType?: string;
+
+  @Column({ nullable: true })
+  imageFileName?: string;
+
+  @Column({ nullable: true })
+  imageSize?: number;
 
   @Column()
-  isCompleted: boolean;
+  isNotRelevant: boolean;
 
   @Column()
-  @Optional()
-  isRelevant?: boolean;
-
-  @Column()
-  @Optional()
-  isOkay?: boolean;
+  isOkay: boolean;
 
   @ManyToOne(
     () => SectionField,

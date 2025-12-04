@@ -22,11 +22,11 @@ export class SectionField {
   @Column()
   internalControl: boolean;
 
-  @Column()
-  howToCheck: string;
+  @Column({ nullable: true })
+  howToCheck?: string;
 
-  @Column()
-  responsibility: string;
+  @Column({ nullable: true })
+  responsibility?: string;
 
   @ManyToOne(() => Section, (section) => section.sectionFields)
   section: Section;

@@ -1,0 +1,19 @@
+.reviewButton {
+  color: var(--color-blue);
+  background: var(--color-light-grey);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 20px;
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.relevance {
+  display: flex;
+  align-items: center;
+}

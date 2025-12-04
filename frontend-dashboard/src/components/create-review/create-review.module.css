@@ -1,0 +1,22 @@
+.createReview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.addDateAndUser {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.initialChecks{
+  color: var(--color-blue);
+}
+
+.checkbox{
+  display: flex;
+  justify-content: space-between;
+  margin-left: 0 !important;
+}

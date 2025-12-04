@@ -10,16 +10,17 @@ import { Report } from 'src/app/report/entities/report.entity';
 import { Section } from 'src/app/section/entities/section.entity';
 import { SectionField } from 'src/app/section-field/entities/section-field.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
+import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 
 dotenv.config();
 
 export const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT ?? '5432', 10),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  url: process.env.NEON_DB_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   synchronize: false,
   entities: [
     User,
@@ -30,6 +31,7 @@ export const dbConfig: TypeOrmModuleOptions = {
     Section,
     SectionField,
     SectionFieldResponse,
+    InitialCheck,
   ],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
 };

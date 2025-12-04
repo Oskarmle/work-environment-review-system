@@ -1,17 +1,18 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
-import { Section } from 'src/app/section/entities/section.entity';
 import { Station } from 'src/app/station/entities/station.entity';
 import { User } from 'src/app/user/entities/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -20,32 +21,23 @@ export class Report {
   id: string;
 
   @Column()
-  doesAmgKnowTasks: boolean;
-
-  @Column()
-  reportAccidents: boolean;
-
-  @Column()
-  workWithRelevantAmgAreas: boolean;
-
-  @Column()
-  followUpApvAndWellBeing: boolean;
-
-  @Column()
-  actionPlanMade: boolean;
-
-  @Column()
   @Optional()
-  comment?: boolean;
-
-  @Column()
-  revisedAt: Date;
+  comment?: string;
 
   @Column()
   isCompleted: boolean;
 
   @ManyToOne(() => FocusArea, (focusArea) => focusArea.reports)
   focusArea: FocusArea;
+
+  @Column()
+  reportBeganAt: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => Station, (station) => station.reports)
   station: Station;
@@ -55,10 +47,6 @@ export class Report {
     (sectionFieldResponse) => sectionFieldResponse.report,
   )
   sectionFieldResponses: SectionFieldResponse[];
-
-  @ManyToMany(() => Section, (section) => section.reports)
-  @JoinTable()
-  sections: Section[];
 
   @ManyToMany(() => User, (user) => user.reports)
   @JoinTable()
