@@ -7,7 +7,32 @@ export const useCreateESectionFieldResponse = () => {
 
   return useMutation({
     mutationFn: async (reportData: ReportResponse[]) => {
-      const response = await axios.post(`${API_URL}/section-field-response`, reportData);
+      const formData = new FormData();
+
+      const responsesWithoutImages = reportData.map((response) => {
+        const { image, ...rest } = response;
+        return rest;
+      });
+
+      formData.append('responses', JSON.stringify(responsesWithoutImages));
+
+      reportData.forEach((response) => {
+        if (response.image) {
+          formData.append('images', response.image);
+        } else {
+          formData.append('images', new Blob());
+        }
+      });
+
+      const response = await axios.post(
+        `${API_URL}/section-field-response`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
 
       return response.data;
     },
