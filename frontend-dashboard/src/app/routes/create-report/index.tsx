@@ -91,7 +91,7 @@ function RouteComponent() {
             sectionFieldId: fieldId,
             isOkay: false,
             comment: '',
-            imageUrl: null,
+            image: null,
             isNotRelevant: true,
             reportId: reportId ?? '',
           };
@@ -116,8 +116,8 @@ function RouteComponent() {
     }
 
     // FIXME: Replace with actual user and station IDs from user data
-    const userId = '4dd4691c-d882-4830-8573-d812c29dae43';
-    const stationId = '3a83fd64-c801-47a3-b0b3-fbb3d9240a13';
+    const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
+    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
 
     const reportData = {
       isCompleted: false,
@@ -130,7 +130,6 @@ function RouteComponent() {
 
     createReportMutation.mutate(reportData, {
       onSuccess: (data) => {
-        console.log('Report created successfully');
         const createdReportId = data.id;
         setReportId(createdReportId);
 
