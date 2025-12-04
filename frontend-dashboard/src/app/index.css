@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-blue: #1f2c4e;
+  --color-light-grey: #e3e4df;
+  --color-white: #ffffff;
+  --color-orange: #e09e40;
+
+  --color-blue-transparent: rgba(31, 44, 78, 0.96);
+  --color-dark-grey: #8c8c8c;
+  --color-dark-orange: #80582a;
+  --color-black: #000000;
+
+  --color-red: #c6361b;
+  --color-green: #1bc621;
+}
+
+body {
+  background-image: url('images/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh;
+  width: 100vw;
+  padding: 10px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 35px;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 16px;
+}
+
+p {
+  font-size: 12px;
+}

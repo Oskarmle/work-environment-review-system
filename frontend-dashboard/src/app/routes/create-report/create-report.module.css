@@ -1,0 +1,18 @@
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 2rem;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  height: 100%;
+}
+
+.card-left {
+  width: 40%;
+  height: 100%;
+}

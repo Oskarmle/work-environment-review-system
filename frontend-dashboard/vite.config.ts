@@ -1,7 +1,16 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+  plugins: [
+    tanstackRouter({
+      routesDirectory: './src/app/routes',
+      generatedRouteTree: './src/app/routeTree.gen.ts',
+      target: 'react',
+      autoCodeSplitting: true,
+    }),
+    react(),
+  ],
+});
