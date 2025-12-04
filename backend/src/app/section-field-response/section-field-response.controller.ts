@@ -1,4 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { SectionFieldResponseService } from './section-field-response.service';
 import { CreateSectionFieldResponseDto } from './dto/create-section-field-response.dto';
 
@@ -9,11 +16,18 @@ export class SectionFieldResponseController {
   ) {}
 
   @Post()
+  @UseInterceptors(FilesInterceptor('images'))
   create(
-    @Body() createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
+    @Body() body: { responses: string },
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
+    const createSectionFieldResponseDtos = JSON.parse(
+      body.responses,
+    ) as CreateSectionFieldResponseDto[];
+
     return this.sectionFieldResponseService.createMany(
       createSectionFieldResponseDtos,
+      files,
     );
   }
 }
