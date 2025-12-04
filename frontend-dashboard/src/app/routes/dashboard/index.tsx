@@ -10,9 +10,7 @@ function RouteComponent() {
   return (
     <div className={styles.dashboard}>
       <Logo />
-      <div>
-        
-      </div>
+      <div></div>
     </div>
   );
 }
