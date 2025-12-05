@@ -3,3 +3,8 @@
   max-width: 40%;
   gap: 20px;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
