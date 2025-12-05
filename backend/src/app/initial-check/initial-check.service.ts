@@ -23,4 +23,8 @@ export class InitialCheckService {
   async findAll(): Promise<InitialCheck[]> {
     return this.initialCheckRepository.find();
   }
+
+  async remove(id: string): Promise<void> {
+    await this.initialCheckRepository.delete(id);
+  }
 }
