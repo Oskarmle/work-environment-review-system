@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import styles from './dashboard.module.css';
 import Logo from '../../../components/logo/Logo';
-import { Box, Card, CardContent, Fab, Modal, Typography } from '@mui/material';
+import { Card, CardContent, Fab } from '@mui/material';
 import InitialCheckDashboardList from '../../../components/initial-check-dashboard-list/Initial-check-dashboard-list';
 import { useDeleteInitialCheck } from '../../../hooks/useRemoveInitialCheck';
 import AddIcon from '@mui/icons-material/Add';
