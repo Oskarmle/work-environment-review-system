@@ -1,3 +1,5 @@
 {
-  "routes": [{ "src": "/(.*)", "dest": "/frontend-dashboard/dist/index.html" }]
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
