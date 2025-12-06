@@ -14,9 +14,7 @@ export const useCreateFocusArea = () => {
 
   return useMutation({
     mutationFn: async (focusAreaData: FocusAreaData) => {
-      const response = await axios.post(`${API_URL}/focus-area`, {
-        focusAreaData,
-      });
+      const response = await axios.post(`${API_URL}/focus-area`, focusAreaData);
 
       return response.data;
     },
