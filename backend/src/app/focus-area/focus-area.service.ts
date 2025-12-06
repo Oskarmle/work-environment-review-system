@@ -39,4 +39,8 @@ export class FocusAreaService {
     await this.focusAreaRepository.update(id, { isActive: true });
     return this.focusAreaRepository.findOneBy({ id });
   }
+
+  async remove(id: string): Promise<void> {
+    await this.focusAreaRepository.delete(id);
+  }
 }

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { FocusAreaService } from './focus-area.service';
 import { CreateFocusAreaDto } from './dto/focus-area.dto';
 import { FocusArea } from './entities/focus-area.entity';
@@ -27,5 +35,10 @@ export class FocusAreaController {
   @Patch('activate')
   async activateFocusArea(@Body('id') id: string): Promise<FocusArea | null> {
     return this.focusAreaService.activeFocusArea(id);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return await this.focusAreaService.remove(id);
   }
 }
