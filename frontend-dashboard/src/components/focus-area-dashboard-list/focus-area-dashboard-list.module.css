@@ -1,0 +1,15 @@
+.focusAreaDashboardList {
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listItem {
+  color: var(--color-blue);
+  background-color: var(--color-light-grey);
+}

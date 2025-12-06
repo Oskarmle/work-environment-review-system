@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { InitialCheckService } from './initial-check.service';
 import { CreateInitialCheckDto } from './dto/create-initial-check.dto';
 
@@ -14,5 +14,10 @@ export class InitialCheckController {
   @Get()
   async findAll() {
     return await this.initialCheckService.findAll();
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return await this.initialCheckService.remove(id);
   }
 }

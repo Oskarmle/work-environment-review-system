@@ -16,7 +16,6 @@ dotenv.config();
 
 export const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
   url: process.env.NEON_DB_URL,
   ssl: {
     rejectUnauthorized: false,

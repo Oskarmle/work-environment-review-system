@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FrontpageIndexRouteImport } from './routes/frontpage/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as CreateReportIndexRouteImport } from './routes/create-report/index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const FrontpageIndexRoute = FrontpageIndexRouteImport.update({
   path: '/frontpage/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CreateReportIndexRoute = CreateReportIndexRouteImport.update({
   id: '/create-report/',
   path: '/create-report/',
@@ -32,30 +38,34 @@ const CreateReportIndexRoute = CreateReportIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/create-report': typeof CreateReportIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/frontpage': typeof FrontpageIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-report': typeof CreateReportIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/frontpage': typeof FrontpageIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/create-report/': typeof CreateReportIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/frontpage/': typeof FrontpageIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create-report' | '/frontpage'
+  fullPaths: '/' | '/create-report' | '/dashboard' | '/frontpage'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create-report' | '/frontpage'
-  id: '__root__' | '/' | '/create-report/' | '/frontpage/'
+  to: '/' | '/create-report' | '/dashboard' | '/frontpage'
+  id: '__root__' | '/' | '/create-report/' | '/dashboard/' | '/frontpage/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateReportIndexRoute: typeof CreateReportIndexRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
   FrontpageIndexRoute: typeof FrontpageIndexRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FrontpageIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/create-report/': {
       id: '/create-report/'
       path: '/create-report'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateReportIndexRoute: CreateReportIndexRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
   FrontpageIndexRoute: FrontpageIndexRoute,
 }
 export const routeTree = rootRouteImport

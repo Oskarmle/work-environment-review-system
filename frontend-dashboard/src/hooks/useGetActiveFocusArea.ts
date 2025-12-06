@@ -11,7 +11,7 @@ const fetchActiveFocusArea = async (): Promise<FocusArea> => {
 
 export const useGetActiveFocusArea = () => {
   return useQuery({
-    queryKey: ['focusArea'],
+    queryKey: ['activeFocusArea'],
     queryFn: fetchActiveFocusArea,
   });
 };
