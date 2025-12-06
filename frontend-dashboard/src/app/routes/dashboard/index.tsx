@@ -7,20 +7,31 @@ import { useDeleteInitialCheck } from '../../../hooks/useRemoveInitialCheck';
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from 'react';
 import CreateInitialCheckModal from '../../../components/create-initial-check-modal/Create-initial-check-modal';
+import FocusAreaDashboardList from '../../../components/focus-area-dashboard-list/Focus-area-dashboard-list';
+import { useDeleteFocusArea } from '../../../hooks/useRemoveFocusArea';
+import CreateFocusAreaModal from '../../../components/create-focus-area-modal/Create-focus-area-modal';
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  const [openInitialCheck, setOpenInitialCheck] = useState(false);
+  const handleOpenInitialCheck = () => setOpenInitialCheck(true);
+  const handleCloseInitialCheck = () => setOpenInitialCheck(false);
   const deleteInitialCheck = useDeleteInitialCheck();
 
-  const handleDelete = (id: string) => {
+  const [openFocusArea, setOpenFocusArea] = useState(false);
+  const handleOpenFocusArea = () => setOpenFocusArea(true);
+  const handleCloseFocusArea = () => setOpenFocusArea(false);
+  const deleteFocusArea = useDeleteFocusArea();
+
+  const handleDeleteInitialCheck = (id: string) => {
     deleteInitialCheck.mutate(id);
+  };
+
+  const handleDeleteFocusArea = (id: string) => {
+    deleteFocusArea.mutate(id);
   };
 
   return (
@@ -35,18 +46,45 @@ function RouteComponent() {
                 size="small"
                 color="secondary"
                 aria-label="add"
-                onClick={handleOpen}
+                onClick={handleOpenInitialCheck}
               >
                 <AddIcon />
               </Fab>
             </div>
             <div>
-              <InitialCheckDashboardList handleDelete={handleDelete} />
+              <InitialCheckDashboardList
+                handleDelete={handleDeleteInitialCheck}
+              />
+            </div>
+          </CardContent>
+        </Card>
+        <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+          <CardContent className={styles['card-content']}>
+            <div className={styles.header}>
+              <h3>Fokus punkt</h3>
+              <Fab
+                size="small"
+                color="secondary"
+                aria-label="add"
+                onClick={handleOpenFocusArea}
+              >
+                <AddIcon />
+              </Fab>
+            </div>
+            <div>
+              <FocusAreaDashboardList handleDelete={handleDeleteFocusArea} />
             </div>
           </CardContent>
         </Card>
       </div>
-      <CreateInitialCheckModal open={open} handleClose={handleClose} />
+      <CreateInitialCheckModal
+        open={openInitialCheck}
+        handleClose={handleCloseInitialCheck}
+      />
+      <CreateFocusAreaModal
+        open={openFocusArea}
+        handleClose={handleCloseFocusArea}
+      />
     </div>
   );
 }
