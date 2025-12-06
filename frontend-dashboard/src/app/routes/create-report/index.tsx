@@ -8,7 +8,7 @@ import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
 import type { ReportResponse } from '../../../types/report-response';
-import { useGetActiveFocusArea } from '../../../hooks/useGetFocusArea';
+import { useGetActiveFocusArea } from '../../../hooks/useGetActiveFocusArea';
 import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';

@@ -19,7 +19,7 @@ import {
 import CustomCard from '../custom-card/Custom-card';
 import { useGetAllInitialChecks } from '../../hooks/useGetInitialChecks';
 import type { InitialCheck } from '../../types/initial-check';
-import { useGetActiveFocusArea } from '../../hooks/useGetFocusArea';
+import { useGetActiveFocusArea } from '../../hooks/useGetActiveFocusArea';
 import { useGetUsers } from '../../hooks/useGetUsers';
 import type { Dayjs } from 'dayjs';
 

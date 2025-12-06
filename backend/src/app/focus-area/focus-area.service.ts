@@ -13,6 +13,13 @@ export class FocusAreaService {
 
   async create(createFocusAreaDto: CreateFocusAreaDto): Promise<FocusArea> {
     const focusArea = this.focusAreaRepository.create(createFocusAreaDto);
+
+    if (createFocusAreaDto.isActive === true) {
+      await this.focusAreaRepository.update(
+        { isActive: true },
+        { isActive: false },
+      );
+    }
     return this.focusAreaRepository.save(focusArea);
   }
 
@@ -22,5 +29,18 @@ export class FocusAreaService {
 
   async findAll(): Promise<FocusArea[]> {
     return this.focusAreaRepository.find();
+  }
+
+  async activeFocusArea(id: string): Promise<FocusArea | null> {
+    await this.focusAreaRepository.update(
+      { isActive: true },
+      { isActive: false },
+    );
+    await this.focusAreaRepository.update(id, { isActive: true });
+    return this.focusAreaRepository.findOneBy({ id });
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.focusAreaRepository.delete(id);
   }
 }
