@@ -178,23 +178,25 @@ function RouteComponent() {
       <Logo />
       <div className={styles.content}>
         <div className={styles['card-left']}>
-          <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
-            <CardContent>
-              <CreateReview
-                handleBeginReview={handleBeginReview}
-                date={date}
-                setDate={setDate}
-                user={user}
-                handleChange={handleChange}
-                initialChecks={initialChecks}
-                setInitialChecks={setInitialChecks}
-                focusAreaChecked={focusAreaChecked}
-                setFocusAreaChecked={setFocusAreaChecked}
-                comment={comment}
-                setComment={setComment}
-              />
-            </CardContent>
-          </Card>
+          {reportId === null && (
+            <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+              <CardContent>
+                <CreateReview
+                  handleBeginReview={handleBeginReview}
+                  date={date}
+                  setDate={setDate}
+                  user={user}
+                  handleChange={handleChange}
+                  initialChecks={initialChecks}
+                  setInitialChecks={setInitialChecks}
+                  focusAreaChecked={focusAreaChecked}
+                  setFocusAreaChecked={setFocusAreaChecked}
+                  comment={comment}
+                  setComment={setComment}
+                />
+              </CardContent>
+            </Card>
+          )}
         </div>
         <div className={styles['card-right']}>
           {!selectedReview ? (
