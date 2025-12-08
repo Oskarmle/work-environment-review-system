@@ -19,4 +19,8 @@ export class SectionService {
   async findAll(): Promise<Section[]> {
     return this.sectionRepository.find();
   }
+
+  async remove(id: string): Promise<void> {
+    await this.sectionRepository.delete(id);
+  }
 }
