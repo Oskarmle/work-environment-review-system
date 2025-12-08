@@ -16,3 +16,14 @@
   width: 40%;
   height: 100%;
 }
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .card-right,
+  .card-left {
+    width: 100%;
+  }
+}
