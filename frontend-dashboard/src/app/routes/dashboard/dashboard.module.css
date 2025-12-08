@@ -12,3 +12,9 @@
 .dashboard-lower {
   margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+}
