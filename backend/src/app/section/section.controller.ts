@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { SectionService } from './section.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
@@ -15,5 +15,10 @@ export class SectionController {
   @Get()
   async findAll(): Promise<Section[]> {
     return this.sectionService.findAll();
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<void> {
+    return this.sectionService.remove(id);
   }
 }
