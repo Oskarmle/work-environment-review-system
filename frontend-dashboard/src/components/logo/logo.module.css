@@ -1,7 +1,23 @@
+.logoContainer {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+}
+
 .logo {
   color: var(--color-light-grey);
 }
 
 .logoImage {
   width: 200px;
+}
+
+.button {
+  height: 40px;
+}
+
+@media (max-width: 480px) {
+  .logoImage {
+    width: 150px;
+  }
 }

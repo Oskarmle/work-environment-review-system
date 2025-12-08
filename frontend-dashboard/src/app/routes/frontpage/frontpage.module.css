@@ -11,3 +11,13 @@
 .button {
   width: 50%;
 }
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 100%;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

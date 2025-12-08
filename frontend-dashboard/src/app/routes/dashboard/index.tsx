@@ -10,6 +10,9 @@ import CreateInitialCheckModal from '../../../components/create-initial-check-mo
 import FocusAreaDashboardList from '../../../components/focus-area-dashboard-list/Focus-area-dashboard-list';
 import { useDeleteFocusArea } from '../../../hooks/useRemoveFocusArea';
 import CreateFocusAreaModal from '../../../components/create-focus-area-modal/Create-focus-area-modal';
+import SectionDashboardList from '../../../components/section-dashboard-list/Section-dashboard-list';
+import CreateSectionModal from '../../../components/create-section-modal/Create-section-modal';
+import { useDeleteSection } from '../../../hooks/useRemoveSection';
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
@@ -26,12 +29,21 @@ function RouteComponent() {
   const handleCloseFocusArea = () => setOpenFocusArea(false);
   const deleteFocusArea = useDeleteFocusArea();
 
+  const [openSection, setOpenSection] = useState(false);
+  const handleOpenSection = () => setOpenSection(true);
+  const handleCloseSection = () => setOpenSection(false);
+  const deleteSection = useDeleteSection();
+
   const handleDeleteInitialCheck = (id: string) => {
     deleteInitialCheck.mutate(id);
   };
 
   const handleDeleteFocusArea = (id: string) => {
     deleteFocusArea.mutate(id);
+  };
+
+  const handleDeleteSection = (id: string) => {
+    deleteSection.mutate(id);
   };
 
   return (
@@ -77,6 +89,24 @@ function RouteComponent() {
           </CardContent>
         </Card>
       </div>
+      <div className={styles['dashboard-lower']}>
+        <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+          <CardContent className={styles['card-content']}>
+            <div className={styles.header}>
+              <h3>Runderings sektioner</h3>
+              <Fab
+                size="small"
+                color="secondary"
+                aria-label="add"
+                onClick={handleOpenSection}
+              >
+                <AddIcon />
+              </Fab>
+            </div>
+            <SectionDashboardList handleDelete={handleDeleteSection} />
+          </CardContent>
+        </Card>
+      </div>
       <CreateInitialCheckModal
         open={openInitialCheck}
         handleClose={handleCloseInitialCheck}
@@ -85,6 +115,7 @@ function RouteComponent() {
         open={openFocusArea}
         handleClose={handleCloseFocusArea}
       />
+      <CreateSectionModal open={openSection} handleClose={handleCloseSection} />
     </div>
   );
 }
