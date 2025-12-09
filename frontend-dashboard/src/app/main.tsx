@@ -31,9 +31,7 @@ keycloak
     onLoad: 'check-sso',
     checkLoginIframe: false,
   })
-  .then((authenticated) => {
-    console.log('Keycloak initialized. Authenticated:', authenticated);
-    
+  .then(() => {
     if (!rootElement.innerHTML) {
       const root = ReactDOM.createRoot(rootElement);
       root.render(
