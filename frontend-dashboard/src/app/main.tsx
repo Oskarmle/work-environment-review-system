@@ -8,6 +8,7 @@ import './index.css';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import keycloak from '../utils/keycloak';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -23,15 +24,29 @@ declare module '@tanstack/react-router' {
 }
 
 const rootElement = document.getElementById('root')!;
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </QueryClientProvider>
-    </StrictMode>,
-  );
-}
+
+// Initialize Keycloak before rendering the app
+keycloak
+  .init({
+    onLoad: 'check-sso',
+    checkLoginIframe: false,
+  })
+  .then((authenticated) => {
+    console.log('Keycloak initialized. Authenticated:', authenticated);
+    
+    if (!rootElement.innerHTML) {
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <StrictMode>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </QueryClientProvider>
+        </StrictMode>,
+      );
+    }
+  })
+  .catch((error) => {
+    console.error('Keycloak initialization failed:', error);
+  });
