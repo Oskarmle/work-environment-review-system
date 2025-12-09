@@ -4,8 +4,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.4.7
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-admin}
     ports:
       - '127.0.0.1:8080:8080'
     command: start-dev
