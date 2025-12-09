@@ -13,14 +13,14 @@ import CreateFocusAreaModal from '../../../components/create-focus-area-modal/Cr
 import SectionDashboardList from '../../../components/section-dashboard-list/Section-dashboard-list';
 import CreateSectionModal from '../../../components/create-section-modal/Create-section-modal';
 import { useDeleteSection } from '../../../hooks/useRemoveSection';
-import { authenticated } from '../../../utils/checkAuthentication';
+import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 
 export const Route = createFileRoute('/dashboard/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  authenticated();
+  useCheckAuthentication();
 
   const [openInitialCheck, setOpenInitialCheck] = useState(false);
   const handleOpenInitialCheck = () => setOpenInitialCheck(true);

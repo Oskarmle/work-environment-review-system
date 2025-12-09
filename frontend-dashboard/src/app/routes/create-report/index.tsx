@@ -12,14 +12,14 @@ import { useGetActiveFocusArea } from '../../../hooks/useGetActiveFocusArea';
 import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
-import { authenticated } from '../../../utils/checkAuthentication';
+import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  authenticated();
+  useCheckAuthentication();
 
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
