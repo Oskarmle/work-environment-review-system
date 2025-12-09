@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import keycloak from '../utils/keycloak';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -14,7 +15,15 @@ export const useCreateFocusArea = () => {
 
   return useMutation({
     mutationFn: async (focusAreaData: FocusAreaData) => {
-      const response = await axios.post(`${API_URL}/focus-area`, focusAreaData);
+      const response = await axios.post(
+        `${API_URL}/focus-area`,
+        focusAreaData,
+        {
+          headers: {
+            Authorization: `Bearer ${keycloak.token}`,
+          },
+        },
+      );
 
       return response.data;
     },
