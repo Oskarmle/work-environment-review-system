@@ -17,9 +17,10 @@ dotenv.config();
 export const dbConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   url: process.env.NEON_DB_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
   synchronize: false,
   entities: [
     User,
