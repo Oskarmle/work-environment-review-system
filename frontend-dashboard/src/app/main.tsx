@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { ThemeProvider } from '@mui/material/styles';
@@ -23,6 +23,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+function App() {
+  useEffect(() => {
+    // Refresh token every 60 seconds
+    const interval = setInterval(() => {
+      keycloak.updateToken(70).then((refreshed) => {
+        if (refreshed) {
+          console.log('Token refreshed');
+        }
+      }).catch(() => {
+        console.log('Failed to refresh token');
+        keycloak.logout();
+      });
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </StrictMode>
+  );
+}
+
 const rootElement = document.getElementById('root')!;
 
 // Initialize Keycloak before rendering the app
@@ -34,15 +62,7 @@ keycloak
   .then(() => {
     if (!rootElement.innerHTML) {
       const root = ReactDOM.createRoot(rootElement);
-      root.render(
-        <StrictMode>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
-              <RouterProvider router={router} />
-            </ThemeProvider>
-          </QueryClientProvider>
-        </StrictMode>,
-      );
+      root.render(<App />);
     }
   })
   .catch((error) => {
