@@ -9,12 +9,15 @@ export const useSetActiveFocusArea = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.patch(`${API_URL}/focus-area/activate`, {
-        id,
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
+      const response = await axios.patch(
+        `${API_URL}/focus-area/activate`,
+        { id },
+        {
+          headers: {
+            Authorization: `Bearer ${keycloak.token}`,
+          },
         },
-      });
+      );
 
       return response.data;
     },

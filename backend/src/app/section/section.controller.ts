@@ -2,11 +2,13 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { SectionService } from './section.service';
 import { CreateSectionDto } from './dto/create-section.dto';
 import { Section } from './entities/section.entity';
+import { Roles } from 'nest-keycloak-connect';
 
 @Controller('section')
 export class SectionController {
   constructor(private sectionService: SectionService) {}
 
+  @Roles({ roles: ['manager'] })
   @Post()
   async create(@Body() createSectionDto: CreateSectionDto): Promise<Section> {
     return this.sectionService.create(createSectionDto);
@@ -17,6 +19,7 @@ export class SectionController {
     return this.sectionService.findAll();
   }
 
+  @Roles({ roles: ['manager'] })
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.sectionService.remove(id);
