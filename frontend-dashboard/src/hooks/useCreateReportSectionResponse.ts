@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import type { ReportResponse } from '../types/report-response';
 import axios from 'axios';
+import keycloak from '../utils/keycloak';
 
 export const useCreateESectionFieldResponse = () => {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -30,6 +31,7 @@ export const useCreateESectionFieldResponse = () => {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${keycloak.token}`,
           },
         },
       );

@@ -2,12 +2,15 @@ import { createFileRoute } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
 import { Button, Card, CardContent } from '@mui/material';
 import styles from './frontpage.module.css';
+import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 
 export const Route = createFileRoute('/frontpage/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  useCheckAuthentication();
+
   return (
     <div className={styles.card}>
       <Logo />
