@@ -12,10 +12,25 @@ import { SectionFieldResponseModule } from './app/section-field-response/section
 import { AuthModule } from './app/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { InitialCheckModule } from './app/initial-check/initial-check.module';
+import {
+  KeycloakConnectModule,
+  ResourceGuard,
+  RoleGuard,
+  AuthGuard,
+} from 'nest-keycloak-connect';
+import { APP_GUARD } from '@nestjs/core';
 
+// FIXME: Linting issues with nest-keycloak-connect, temporarily disabled
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    KeycloakConnectModule.register({
+      authServerUrl: 'http://localhost:8080',
+      realm: process.env.KEYCLOAK_REALM,
+      clientId: process.env.KEYCLOAK_CLIENT_ID,
+      secret: process.env.KEYCLOAK_SECRET || '',
+    }),
     TypeOrmModule.forRoot(dbConfig),
     StationModule,
     RoleModule,
@@ -27,6 +42,23 @@ import { InitialCheckModule } from './app/initial-check/initial-check.module';
     SectionFieldResponseModule,
     AuthModule,
     InitialCheckModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      useClass: ResourceGuard,
+    },
+    {
+      provide: APP_GUARD,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      useClass: RoleGuard,
+    },
   ],
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import styles from './logo.module.css';
 import { Button } from '@mui/material';
+import keycloak from '../../utils/keycloak';
 
 const Logo = () => {
   const router = useRouter();
@@ -9,6 +10,10 @@ const Logo = () => {
 
   const handleNavigation = () => {
     navigate({ to: '/frontpage' });
+  };
+
+  const handleLogout = () => {
+    keycloak.logout({ redirectUri: window.location.origin });
   };
 
   return (
@@ -21,16 +26,26 @@ const Logo = () => {
         />
         <h1>Arbejdsmiljørundering</h1>
       </div>
-      {currentPath !== '/frontpage' && (
+      <div className={styles['button-box']}>
+        {currentPath !== '/frontpage' && (
+          <Button
+            className={styles.button}
+            color="secondary"
+            onClick={handleNavigation}
+            variant="contained"
+          >
+            Forside
+          </Button>
+        )}
         <Button
           className={styles.button}
-          color="secondary"
-          onClick={handleNavigation}
+          color="warning"
+          onClick={handleLogout}
           variant="contained"
         >
-          Forside
+          Log ud
         </Button>
-      )}
+      </div>
     </div>
   );
 };

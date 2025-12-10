@@ -55,6 +55,14 @@ body {
   height: 100vh;
 }
 
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
 h1 {
   font-size: 40px;
 }
