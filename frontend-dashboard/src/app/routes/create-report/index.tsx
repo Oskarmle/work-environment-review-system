@@ -158,20 +158,33 @@ function RouteComponent() {
   const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
 
   const handleSaveProgress = () => {
+    console.log('Section field answers:', sectionFieldAnswers);
+    console.log('report id', reportId);
+
+    const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
+
+    if (sectionFieldResponseArray.length === sectionFields?.length) {
+      createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
+        onSuccess: () => {
+          console.log('Section field responses saved successfully');
+          alert('Fremdrift gemt!');
+        },
+      });
+    }
+  };
+
+  const handleSubmitReport = () => {
     console.log('All section field answers:', sectionFieldAnswers);
     console.log('report id', reportId);
 
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
-    createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
-      onSuccess: () => {
-        console.log('Section field responses saved successfully');
-        alert('Fremdrift gemt!');
-      },
-    });
-  };
-
-  const handleSubmitReport = () => {
+    if (sectionFieldResponseArray.length !== sectionFields?.length) {
+      console.warn(
+        'Not all section fields have been answered. Please complete all fields before saving progress.',
+      );
+      return;
+    }
     console.log('Submitting report with answers:', sectionFieldAnswers);
     // FIXME: Save progress with isCompleted = true
   };
