@@ -13,6 +13,7 @@ import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
+import { useCompleteReport } from '../../../hooks/useCompleteReport';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -173,6 +174,8 @@ function RouteComponent() {
     }
   };
 
+  const completeReportMutation = useCompleteReport();
+
   const handleSubmitReport = () => {
     console.log('All section field answers:', sectionFieldAnswers);
     console.log('report id', reportId);
@@ -185,8 +188,8 @@ function RouteComponent() {
       );
       return;
     }
+    completeReportMutation.mutate(reportId ?? '');
     console.log('Submitting report with answers:', sectionFieldAnswers);
-    // FIXME: Save progress with isCompleted = true
   };
 
   return (
