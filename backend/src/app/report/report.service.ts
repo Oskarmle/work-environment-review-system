@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { FindOneOptions, Repository } from 'typeorm';
@@ -28,5 +28,18 @@ export class ReportService {
 
   findAll(): Promise<Report[]> {
     return this.reportRepository.find();
+  }
+
+  async markAsCompleted(reportId: string): Promise<Report> {
+    const report = await this.reportRepository.findOne({
+      where: { id: reportId },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    report.isCompleted = true;
+    return this.reportRepository.save(report);
   }
 }
