@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
 import { Card, CardContent, type SelectChangeEvent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
@@ -21,6 +21,7 @@ export const Route = createFileRoute('/create-report/')({
 
 function RouteComponent() {
   useCheckAuthentication();
+  const navigate = useNavigate();
 
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
@@ -188,7 +189,12 @@ function RouteComponent() {
       );
       return;
     }
-    completeReportMutation.mutate(reportId ?? '');
+    completeReportMutation.mutate(reportId ?? '', {
+      onSuccess: () => {
+        alert('Rapport indsendt!');
+        navigate({ to: '/frontpage' });
+      },
+    });
     console.log('Submitting report with answers:', sectionFieldAnswers);
   };
 
