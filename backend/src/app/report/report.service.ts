@@ -39,6 +39,10 @@ export class ReportService {
       throw new NotFoundException('Report not found');
     }
 
+    if (report.isCompleted === true) {
+      return report;
+    }
+
     report.isCompleted = true;
     return this.reportRepository.save(report);
   }
