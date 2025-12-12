@@ -14,6 +14,7 @@ import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 import { useCompleteReport } from '../../../hooks/useCompleteReport';
+import keycloak from '../../../utils/keycloak';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -115,21 +116,27 @@ function RouteComponent() {
   const { data: focusAreaData } = useGetActiveFocusArea();
 
   const handleBeginReview = () => {
-    if (!date || !focusAreaData || !focusAreaChecked || !initialChecks) {
+    // FIXME: Replace with actual user and station IDs from user data
+    // const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
+    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
+    const userId = keycloak.tokenParsed?.sub;
+
+    if (
+      !date ||
+      !focusAreaData ||
+      !focusAreaChecked ||
+      !initialChecks ||
+      !userId
+    ) {
       console.error('Missing required fields');
       return;
     }
-
-    // FIXME: Replace with actual user and station IDs from user data
-    const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
-    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
 
     const reportData = {
       isCompleted: false,
       focusAreaId: focusAreaData.id,
       stationId: stationId,
       comment: comment,
-      reportBeganAt: date.format('YYYY-MM-DD'),
       userId: userId,
     };
 
