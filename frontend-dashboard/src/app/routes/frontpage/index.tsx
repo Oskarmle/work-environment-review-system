@@ -12,7 +12,7 @@ export const Route = createFileRoute('/frontpage/')({
 function RouteComponent() {
   useCheckAuthentication();
 
-  const unfinishedReports = useGetUnfinishedReports();
+  const { data: unfinishedReport } = useGetUnfinishedReports();
 
   return (
     <div className={styles.card}>
@@ -30,7 +30,7 @@ function RouteComponent() {
             color="secondary"
             className={styles.button}
             href="/create-report"
-            disabled={unfinishedReports.data?.length! > 0}
+            disabled={unfinishedReport?.isCompleted === false}
           >
             Begynd ny rundering
           </Button>
