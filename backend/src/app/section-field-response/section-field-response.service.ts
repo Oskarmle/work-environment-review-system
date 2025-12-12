@@ -34,6 +34,13 @@ export class SectionFieldResponseService {
     return this.sectionFieldResponseRepository.save(sectionFieldResponse);
   }
 
+  async findAllForAReport(reportId: string): Promise<SectionFieldResponse[]> {
+    return this.sectionFieldResponseRepository.find({
+      where: { report: { id: reportId } },
+      relations: ['sectionField'],
+    });
+  }
+
   async createMany(
     createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
     files?: UploadedFile[],
