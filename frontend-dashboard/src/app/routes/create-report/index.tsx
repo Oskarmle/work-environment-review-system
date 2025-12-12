@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
 import { Card, CardContent, type SelectChangeEvent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
@@ -13,6 +13,7 @@ import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
+import { useCompleteReport } from '../../../hooks/useCompleteReport';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/create-report/')({
 
 function RouteComponent() {
   useCheckAuthentication();
+  const navigate = useNavigate();
 
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
@@ -158,22 +160,42 @@ function RouteComponent() {
   const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
 
   const handleSaveProgress = () => {
+    console.log('Section field answers:', sectionFieldAnswers);
+    console.log('report id', reportId);
+
+    const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
+
+    if (sectionFieldResponseArray.length === sectionFields?.length) {
+      createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
+        onSuccess: () => {
+          console.log('Section field responses saved successfully');
+          alert('Fremdrift gemt!');
+        },
+      });
+    }
+  };
+
+  const completeReportMutation = useCompleteReport();
+
+  const handleSubmitReport = () => {
     console.log('All section field answers:', sectionFieldAnswers);
     console.log('report id', reportId);
 
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
-    createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
+    if (sectionFieldResponseArray.length !== sectionFields?.length) {
+      console.warn(
+        'Not all section fields have been answered. Please complete all fields before saving progress.',
+      );
+      return;
+    }
+    completeReportMutation.mutate(reportId ?? '', {
       onSuccess: () => {
-        console.log('Section field responses saved successfully');
-        alert('Fremdrift gemt!');
+        alert('Rapport indsendt!');
+        navigate({ to: '/frontpage' });
       },
     });
-  };
-
-  const handleSubmitReport = () => {
     console.log('Submitting report with answers:', sectionFieldAnswers);
-    // FIXME: Save progress with isCompleted = true
   };
 
   return (
