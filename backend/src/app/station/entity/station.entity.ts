@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Report } from 'src/app/report/entities/report.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Station {
@@ -7,4 +8,7 @@ export class Station {
 
   @Column()
   stationName: string;
+
+  @OneToMany(() => Report, (report) => report.station)
+  reports: Report[];
 }

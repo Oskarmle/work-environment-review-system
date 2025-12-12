@@ -1,6 +1,7 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
+import { Station } from 'src/app/station/entity/station.entity';
 import {
   Column,
   CreateDateColumn,
@@ -34,6 +35,9 @@ export class Report {
 
   @Column()
   userId: string;
+
+  @ManyToOne(() => Station, (station) => station.reports)
+  station: Station;
 
   @OneToMany(
     () => SectionFieldResponse,
