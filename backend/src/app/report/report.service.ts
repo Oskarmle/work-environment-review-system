@@ -12,11 +12,10 @@ export class ReportService {
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report> {
-    const { stationId, focusAreaId, ...reportData } = createReportDto;
+    const { focusAreaId, ...reportData } = createReportDto;
 
     const report = this.reportRepository.create({
       ...reportData,
-      station: { id: stationId },
       focusArea: { id: focusAreaId },
     });
     return this.reportRepository.save(report);
@@ -28,5 +27,27 @@ export class ReportService {
 
   findAll(): Promise<Report[]> {
     return this.reportRepository.find();
+  }
+
+  async findAllByUserId(
+    userId: string,
+    isCompleted?: boolean,
+  ): Promise<Report[]> {
+    const queryBuilder = this.reportRepository
+      .createQueryBuilder('report')
+      .leftJoin('report.users', 'user')
+      .where('user.id = :userId', { userId })
+      .leftJoinAndSelect(
+        'report.sectionFieldResponses',
+        'sectionFieldResponses',
+      );
+
+    if (isCompleted !== undefined) {
+      queryBuilder.andWhere('report.isCompleted = :isCompleted', {
+        isCompleted,
+      });
+    }
+
+    return queryBuilder.getMany();
   }
 }

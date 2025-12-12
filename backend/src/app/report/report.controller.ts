@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 
@@ -16,8 +16,22 @@ export class ReportController {
     return await this.reportService.findAll();
   }
 
+  @Get('user/:userId')
+  async findAllByUserId(
+    @Param('userId') userId: string,
+    @Query('isCompleted') isCompleted?: string,
+  ) {
+    const isCompletedBool =
+      isCompleted === 'true'
+        ? true
+        : isCompleted === 'false'
+          ? false
+          : undefined;
+    return await this.reportService.findAllByUserId(userId, isCompletedBool);
+  }
+
   @Get(':id')
-  async findOne(@Body('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return await this.reportService.findOne({ where: { id } });
   }
 }
