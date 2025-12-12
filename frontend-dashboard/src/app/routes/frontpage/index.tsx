@@ -3,6 +3,7 @@ import Logo from '../../../components/logo/Logo';
 import { Button, Card, CardContent } from '@mui/material';
 import styles from './frontpage.module.css';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
+import { useGetUnfinishedReports } from '../../../hooks/useGetunfinishedReport';
 
 export const Route = createFileRoute('/frontpage/')({
   component: RouteComponent,
@@ -10,6 +11,8 @@ export const Route = createFileRoute('/frontpage/')({
 
 function RouteComponent() {
   useCheckAuthentication();
+
+  const unfinishedReports = useGetUnfinishedReports();
 
   return (
     <div className={styles.card}>
@@ -27,6 +30,7 @@ function RouteComponent() {
             color="secondary"
             className={styles.button}
             href="/create-report"
+            disabled={unfinishedReports.data?.length! > 0}
           >
             Begynd ny rundering
           </Button>

@@ -12,11 +12,10 @@ export class ReportService {
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report> {
-    const { stationId, focusAreaId, ...reportData } = createReportDto;
+    const { focusAreaId, ...reportData } = createReportDto;
 
     const report = this.reportRepository.create({
       ...reportData,
-      station: { id: stationId },
       focusArea: { id: focusAreaId },
     });
     return this.reportRepository.save(report);
@@ -28,6 +27,18 @@ export class ReportService {
 
   findAll(): Promise<Report[]> {
     return this.reportRepository.find();
+  }
+
+  async findAllByUserId(
+    userId: string,
+    isCompleted?: boolean,
+  ): Promise<Report[]> {
+    return this.reportRepository.find({
+      where: {
+        userId,
+        ...(isCompleted !== undefined && { isCompleted }),
+      },
+    });
   }
 
   async markAsCompleted(reportId: string): Promise<Report> {

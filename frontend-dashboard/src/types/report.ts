@@ -3,6 +3,5 @@ export type CreateReport = {
   focusAreaId: string;
   stationId: string;
   comment?: string;
-  reportBeganAt: string;
   userId: string;
 };
