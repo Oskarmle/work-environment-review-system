@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -29,5 +31,10 @@ export class SectionFieldResponseController {
       createSectionFieldResponseDtos,
       files,
     );
+  }
+
+  @Get(':reportId')
+  findAllForAReport(@Param('reportId') reportId: string) {
+    return this.sectionFieldResponseService.findAllForAReport(reportId);
   }
 }

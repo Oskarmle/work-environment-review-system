@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Station } from './entities/station.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateStationDto } from './dto/create-station.dto';
+import { Station } from './entity/station.entity';
 
 @Injectable()
 export class StationService {
