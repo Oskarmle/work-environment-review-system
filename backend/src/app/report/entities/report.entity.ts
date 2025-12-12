@@ -32,6 +32,9 @@ export class Report {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column()
+  userId: string;
+
   @OneToMany(
     () => SectionFieldResponse,
     (sectionFieldResponse) => sectionFieldResponse.report,
