@@ -35,7 +35,7 @@ export class ReportController {
         : isCompleted === 'false'
           ? false
           : undefined;
-    return await this.reportService.findAllByUserId(userId, isCompletedBool);
+    return await this.reportService.findByUserId(userId, isCompletedBool);
   }
 
   @Get(':id')

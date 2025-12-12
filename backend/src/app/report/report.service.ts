@@ -29,10 +29,7 @@ export class ReportService {
     return this.reportRepository.find();
   }
 
-  async findAllByUserId(
-    userId: string,
-    isCompleted?: boolean,
-  ): Promise<Report[]> {
+  async findByUserId(userId: string, isCompleted?: boolean): Promise<Report[]> {
     return this.reportRepository.find({
       where: {
         userId,
