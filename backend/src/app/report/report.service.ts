@@ -33,22 +33,12 @@ export class ReportService {
     userId: string,
     isCompleted?: boolean,
   ): Promise<Report[]> {
-    const queryBuilder = this.reportRepository
-      .createQueryBuilder('report')
-      .leftJoin('report.users', 'user')
-      .where('user.id = :userId', { userId })
-      .leftJoinAndSelect(
-        'report.sectionFieldResponses',
-        'sectionFieldResponses',
-      );
-
-    if (isCompleted !== undefined) {
-      queryBuilder.andWhere('report.isCompleted = :isCompleted', {
-        isCompleted,
-      });
-    }
-
-    return queryBuilder.getMany();
+    return this.reportRepository.find({
+      where: {
+        userId,
+        ...(isCompleted !== undefined && { isCompleted }),
+      },
+    });
   }
 
   async markAsCompleted(reportId: string): Promise<Report> {
