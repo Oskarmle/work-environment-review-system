@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 
@@ -19,5 +19,10 @@ export class ReportController {
   @Get(':id')
   async findOne(@Body('id') id: string) {
     return await this.reportService.findOne({ where: { id } });
+  }
+
+  @Patch(':id/complete')
+  async markAsCompleted(@Param('id') id: string) {
+    return await this.reportService.markAsCompleted(id);
   }
 }
