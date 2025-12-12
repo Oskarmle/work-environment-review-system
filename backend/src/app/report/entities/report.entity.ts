@@ -1,13 +1,10 @@
 import { Optional } from '@nestjs/common';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
-import { User } from 'src/app/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -40,8 +37,4 @@ export class Report {
     (sectionFieldResponse) => sectionFieldResponse.report,
   )
   sectionFieldResponses: SectionFieldResponse[];
-
-  @ManyToMany(() => User, (user) => user.reports)
-  @JoinTable()
-  users: User[];
 }
