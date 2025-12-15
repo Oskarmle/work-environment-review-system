@@ -22,7 +22,7 @@ function RouteComponent() {
           <CardContent className={styles['card-content']}>
             <div>
               <h3>Ny rundering</h3>
-              {/* FIXME: Set station from user instead of static */}
+              {/* FIXME: Set station in report creation */}
               <p>Station Dragør</p>
             </div>
             <Button
