@@ -11,11 +11,11 @@ import type { ReportResponse } from '../../../types/report-response';
 import { useGetActiveFocusArea } from '../../../hooks/useGetActiveFocusArea';
 import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
-import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 import { useCompleteReport } from '../../../hooks/useCompleteReport';
 import keycloak from '../../../utils/keycloak';
 import { useGetSectionFieldResponse } from '../../../hooks/useGetSectionFieldResponse';
+import { useCreateSectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -242,7 +242,7 @@ function RouteComponent() {
 
   const createReportMutation = useCreateReport();
 
-  const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
+  const createSectionFieldResponseMutation = useCreateSectionFieldResponse();
 
   const handleSaveProgress = () => {
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
@@ -289,7 +289,7 @@ function RouteComponent() {
         },
         onError: (error) => {
           console.error('Error saving section field responses:', error);
-          alert('Fejl ved gemning af svar');
+          alert('Fejl ved indsendelse af rapport. Prøv igen.');
         },
       },
     );
