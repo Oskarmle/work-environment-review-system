@@ -5,7 +5,7 @@ import type { Report } from '../types/report';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const fetchUnfinishedReports = async (): Promise<Report | undefined> => {
+const fetchUnfinishedReports = async (): Promise<Report | null> => {
   const response = await axios.get<Report[]>(
     `${API_URL}/report?isCompleted=false`,
     {
@@ -14,7 +14,7 @@ const fetchUnfinishedReports = async (): Promise<Report | undefined> => {
       },
     },
   );
-  return response.data[0];
+  return response.data[0] || null;
 };
 
 export const useGetUnfinishedReports = () => {
