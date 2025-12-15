@@ -274,12 +274,25 @@ function RouteComponent() {
       );
       return;
     }
-    completeReportMutation.mutate(reportId ?? '', {
-      onSuccess: () => {
-        alert('Rapport indsendt!');
-        navigate({ to: '/frontpage' });
+
+    const isUpdating = !!existingReportId;
+    createSectionFieldResponseMutation.mutate(
+      { reportData: sectionFieldResponseArray, isUpdate: isUpdating },
+      {
+        onSuccess: () => {
+          completeReportMutation.mutate(reportId ?? '', {
+            onSuccess: () => {
+              alert('Rapport indsendt!');
+              navigate({ to: '/frontpage' });
+            },
+          });
+        },
+        onError: (error) => {
+          console.error('Error saving section field responses:', error);
+          alert('Fejl ved gemning af svar');
+        },
       },
-    });
+    );
   };
 
   return (
