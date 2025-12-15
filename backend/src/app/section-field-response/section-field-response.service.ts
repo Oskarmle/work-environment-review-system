@@ -77,4 +77,23 @@ export class SectionFieldResponseService {
       where: ids.map((id: string) => ({ id })),
     });
   }
+
+  async updateSectionFieldResponses(
+    createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
+    files?: UploadedFile[],
+  ): Promise<SectionFieldResponse[]> {
+    // First, get the reportId from the first dto (all should have the same reportId)
+    const reportId = createSectionFieldResponseDtos[0]?.reportId;
+    if (!reportId) {
+      throw new Error('Report ID is required for upsert');
+    }
+
+    // Delete existing responses for this report
+    await this.sectionFieldResponseRepository.delete({
+      report: { id: reportId },
+    });
+
+    // Then create new ones
+    return this.createMany(createSectionFieldResponseDtos, files);
+  }
 }
