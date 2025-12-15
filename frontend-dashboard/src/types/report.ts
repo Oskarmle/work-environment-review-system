@@ -9,8 +9,14 @@ export type CreateReport = {
 export type Report = {
   id: string;
   isCompleted: boolean;
-  focusAreaId: string;
-  stationId: string;
+  focusArea: {
+    id: string;
+    name: string;
+  };
+  station: {
+    id: string;
+    stationName: string;
+  };
   comment?: string;
   userId: string;
   createdAt: string;
