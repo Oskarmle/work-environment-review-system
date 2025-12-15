@@ -3,7 +3,7 @@ import Logo from '../../../components/logo/Logo';
 import { Button, Card, CardContent } from '@mui/material';
 import styles from './frontpage.module.css';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
-import { useGetUnfinishedReports } from '../../../hooks/useGetunfinishedReport';
+import { useGetUnfinishedReports } from '../../../hooks/useGetUnfinishedReport';
 
 export const Route = createFileRoute('/frontpage/')({
   component: RouteComponent,
@@ -50,7 +50,7 @@ function RouteComponent() {
                 variant="contained"
                 color="secondary"
                 className={styles.button}
-                href="/create-report"
+                href={`/create-report?reportId=${unfinishedReport.id}`}
               >
                 Fortsæt din rundering
               </Button>
