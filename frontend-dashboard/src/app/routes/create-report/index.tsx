@@ -3,7 +3,7 @@ import Logo from '../../../components/logo/Logo';
 import { Card, CardContent, type SelectChangeEvent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
 import styles from './create-report.module.css';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
@@ -15,14 +15,21 @@ import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSe
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 import { useCompleteReport } from '../../../hooks/useCompleteReport';
 import keycloak from '../../../utils/keycloak';
+import { useGetSectionFieldResponse } from '../../../hooks/useGetSectionFieldResponse';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>): { reportId?: string } => {
+    return {
+      reportId: search.reportId as string | undefined,
+    };
+  },
 });
 
 function RouteComponent() {
   useCheckAuthentication();
   const navigate = useNavigate();
+  const { reportId: existingReportId } = Route.useSearch();
 
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
@@ -37,7 +44,83 @@ function RouteComponent() {
   );
   const [focusAreaChecked, setFocusAreaChecked] = useState<boolean>(false);
   const [comment, setComment] = useState<string>('');
-  const [reportId, setReportId] = useState<string | null>(null);
+  const [reportId, setReportId] = useState<string | null>(existingReportId || null);
+
+  // Fetch existing section field responses if we have an existing report
+  const { data: existingResponses, isLoading: isLoadingResponses } = useGetSectionFieldResponse(
+    existingReportId || ''
+  );
+
+  // Debug logging
+  useEffect(() => {
+    console.log('existingReportId:', existingReportId);
+    console.log('existingResponses:', existingResponses);
+    console.log('isLoadingResponses:', isLoadingResponses);
+  }, [existingReportId, existingResponses, isLoadingResponses]);
+
+  // Prefill answers when existing responses are loaded
+  useEffect(() => {
+    if (existingResponses && existingResponses.length > 0 && existingReportId) {
+      console.log('Starting to prefill answers with', existingResponses.length, 'responses');
+      const prefilledAnswers: Record<string, ReportResponse> = {};
+      
+      existingResponses.forEach((response) => {
+        // Extract sectionFieldId from the response
+        // The backend returns a sectionField object with an id property
+        const sectionFieldId = typeof response.sectionFieldId === 'string' 
+          ? response.sectionFieldId 
+          : (response as any).sectionField?.id;
+
+        if (!sectionFieldId) {
+          console.warn('Missing sectionFieldId for response:', response);
+          return;
+        }
+
+        // Convert image data back to File if it exists
+        let imageFile: File | null = null;
+        if (response.imageData && response.imageFileName && response.imageMimeType) {
+          try {
+            // imageData comes as Buffer from backend, need to handle it properly
+            let base64Data = response.imageData;
+            
+            // If it's a Buffer object, convert it to base64 string
+            if (typeof base64Data !== 'string' && (response.imageData as any).type === 'Buffer') {
+              const uint8Array = new Uint8Array((response.imageData as any).data);
+              base64Data = btoa(String.fromCharCode(...uint8Array));
+            }
+            
+            // Convert base64 to blob
+            const byteCharacters = atob(base64Data as string);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: response.imageMimeType });
+            imageFile = new File([blob], response.imageFileName, { 
+              type: response.imageMimeType 
+            });
+          } catch (error) {
+            console.error('Error converting image data:', error);
+          }
+        }
+
+        prefilledAnswers[sectionFieldId] = {
+          sectionFieldId: sectionFieldId,
+          reportId: existingReportId,
+          isOkay: response.isOkay,
+          isNotRelevant: response.isNotRelevant,
+          comment: response.comment || '',
+          image: imageFile,
+        };
+      });
+
+      setSectionFieldAnswers(prefilledAnswers);
+      console.log('Successfully prefilled answers:', prefilledAnswers);
+    } else {
+      console.log('Not prefilling - existingResponses:', existingResponses, 'existingReportId:', existingReportId);
+    }
+  }, [existingResponses, existingReportId]);
 
   const sectionRelevantStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
@@ -173,12 +256,16 @@ function RouteComponent() {
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
     if (sectionFieldResponseArray.length === sectionFields?.length) {
-      createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
-        onSuccess: () => {
-          console.log('Section field responses saved successfully');
-          alert('Fremdrift gemt!');
+      const isUpdating = !!existingReportId;
+      createSectionFieldResponseMutation.mutate(
+        { reportData: sectionFieldResponseArray, isUpdate: isUpdating },
+        {
+          onSuccess: () => {
+            console.log('Section field responses saved successfully');
+            alert('Fremdrift gemt!');
+          },
         },
-      });
+      );
     }
   };
 
