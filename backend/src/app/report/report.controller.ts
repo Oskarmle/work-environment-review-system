@@ -20,8 +20,14 @@ export class ReportController {
   }
 
   @Get()
-  async findAll() {
-    return await this.reportService.findAll();
+  async findAll(@Query('isCompleted') isCompleted?: string) {
+    const isCompletedBool =
+      isCompleted === 'true'
+        ? true
+        : isCompleted === 'false'
+          ? false
+          : undefined;
+    return await this.reportService.findAll(isCompletedBool);
   }
 
   @Get('user/:userId')

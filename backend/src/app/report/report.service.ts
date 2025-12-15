@@ -36,8 +36,10 @@ export class ReportService {
     return this.reportRepository.findOne(options);
   }
 
-  findAll(): Promise<Report[]> {
-    return this.reportRepository.find();
+  findAll(isCompleted?: boolean): Promise<Report[]> {
+    return this.reportRepository.find({
+      where: isCompleted !== undefined ? { isCompleted } : {},
+    });
   }
 
   async findByUserId(userId: string, isCompleted?: boolean): Promise<Report[]> {
