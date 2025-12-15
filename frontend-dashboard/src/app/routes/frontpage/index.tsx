@@ -15,27 +15,49 @@ function RouteComponent() {
   const { data: unfinishedReport } = useGetUnfinishedReports();
 
   return (
-    <div className={styles.card}>
+    <div>
       <Logo />
-      <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
-        <CardContent className={styles['card-content']}>
-          <div>
-            <h3>Ny rundering</h3>
-            {/* FIXME: Set station from user instead of static */}
-            <p>Station Dragør</p>
-          </div>
-          <Button
-            type="submit"
-            variant="contained"
-            color="secondary"
-            className={styles.button}
-            href="/create-report"
-            disabled={unfinishedReport?.isCompleted === false}
-          >
-            Begynd ny rundering
-          </Button>
-        </CardContent>
-      </Card>
+      <div className={styles.card}>
+        <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+          <CardContent className={styles['card-content']}>
+            <div>
+              <h3>Ny rundering</h3>
+              {/* FIXME: Set station from user instead of static */}
+              <p>Station Dragør</p>
+            </div>
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              className={styles.button}
+              href="/create-report"
+              disabled={unfinishedReport?.isCompleted === false}
+            >
+              Begynd ny rundering
+            </Button>
+          </CardContent>
+        </Card>
+        {unfinishedReport?.isCompleted === false && (
+          <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+            <CardContent className={styles['card-content']}>
+              <div>
+                <h3>Fortsæt rundering</h3>
+                {/* FIXME: Set station from user instead of static */}
+                <p>Station Dragør</p>
+              </div>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                className={styles.button}
+                href="/create-report"
+              >
+                Fortsæt din rundering
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
