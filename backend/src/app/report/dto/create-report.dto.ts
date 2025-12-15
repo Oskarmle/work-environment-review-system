@@ -13,6 +13,10 @@ export class CreateReportDto {
   @IsString()
   focusAreaId: string;
 
+  @IsNotEmpty()
+  @IsString()
+  stationId: string;
+
   @IsString()
   @IsNotEmpty()
   userId: string;
