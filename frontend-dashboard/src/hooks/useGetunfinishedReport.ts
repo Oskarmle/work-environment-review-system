@@ -14,7 +14,6 @@ const fetchUnfinishedReports = async (): Promise<Report | undefined> => {
       },
     },
   );
-  console.log('unfinished reports response', response.data[0]);
   return response.data[0];
 };
 

@@ -16,7 +16,6 @@ const fetchSectionFieldResponses = async (
       },
     },
   );
-  console.log('section field responses', response.data);
   return response.data;
 };
 

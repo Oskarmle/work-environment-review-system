@@ -32,7 +32,6 @@ function App() {
           console.log('Token refreshed');
         }
       }).catch(() => {
-        console.log('Failed to refresh token');
         keycloak.logout();
       });
     }, 60000);

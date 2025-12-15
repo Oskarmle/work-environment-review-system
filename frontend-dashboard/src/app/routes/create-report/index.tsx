@@ -44,61 +44,59 @@ function RouteComponent() {
   );
   const [focusAreaChecked, setFocusAreaChecked] = useState<boolean>(false);
   const [comment, setComment] = useState<string>('');
-  const [reportId, setReportId] = useState<string | null>(existingReportId || null);
-
-  // Fetch existing section field responses if we have an existing report
-  const { data: existingResponses, isLoading: isLoadingResponses } = useGetSectionFieldResponse(
-    existingReportId || ''
+  const [reportId, setReportId] = useState<string | null>(
+    existingReportId || null,
   );
 
-  // Debug logging
-  useEffect(() => {
-    console.log('existingReportId:', existingReportId);
-    console.log('existingResponses:', existingResponses);
-    console.log('isLoadingResponses:', isLoadingResponses);
-  }, [existingReportId, existingResponses, isLoadingResponses]);
+  const { data: existingResponses } = useGetSectionFieldResponse(
+    existingReportId || '',
+  );
 
-  // Prefill answers when existing responses are loaded
   useEffect(() => {
     if (existingResponses && existingResponses.length > 0 && existingReportId) {
-      console.log('Starting to prefill answers with', existingResponses.length, 'responses');
       const prefilledAnswers: Record<string, ReportResponse> = {};
-      
+
       existingResponses.forEach((response) => {
-        // Extract sectionFieldId from the response
-        // The backend returns a sectionField object with an id property
-        const sectionFieldId = typeof response.sectionFieldId === 'string' 
-          ? response.sectionFieldId 
-          : (response as any).sectionField?.id;
+        const sectionFieldId =
+          typeof response.sectionFieldId === 'string'
+            ? response.sectionFieldId
+            : (response as any).sectionField?.id;
 
         if (!sectionFieldId) {
           console.warn('Missing sectionFieldId for response:', response);
           return;
         }
 
-        // Convert image data back to File if it exists
         let imageFile: File | null = null;
-        if (response.imageData && response.imageFileName && response.imageMimeType) {
+        if (
+          response.imageData &&
+          response.imageFileName &&
+          response.imageMimeType
+        ) {
           try {
-            // imageData comes as Buffer from backend, need to handle it properly
             let base64Data = response.imageData;
-            
-            // If it's a Buffer object, convert it to base64 string
-            if (typeof base64Data !== 'string' && (response.imageData as any).type === 'Buffer') {
-              const uint8Array = new Uint8Array((response.imageData as any).data);
+
+            if (
+              typeof base64Data !== 'string' &&
+              (response.imageData as any).type === 'Buffer'
+            ) {
+              const uint8Array = new Uint8Array(
+                (response.imageData as any).data,
+              );
               base64Data = btoa(String.fromCharCode(...uint8Array));
             }
-            
-            // Convert base64 to blob
+
             const byteCharacters = atob(base64Data as string);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {
               byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
             const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: response.imageMimeType });
-            imageFile = new File([blob], response.imageFileName, { 
-              type: response.imageMimeType 
+            const blob = new Blob([byteArray], {
+              type: response.imageMimeType,
+            });
+            imageFile = new File([blob], response.imageFileName, {
+              type: response.imageMimeType,
             });
           } catch (error) {
             console.error('Error converting image data:', error);
@@ -116,9 +114,6 @@ function RouteComponent() {
       });
 
       setSectionFieldAnswers(prefilledAnswers);
-      console.log('Successfully prefilled answers:', prefilledAnswers);
-    } else {
-      console.log('Not prefilling - existingResponses:', existingResponses, 'existingReportId:', existingReportId);
     }
   }, [existingResponses, existingReportId]);
 
@@ -250,31 +245,27 @@ function RouteComponent() {
   const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
 
   const handleSaveProgress = () => {
-    console.log('Section field answers:', sectionFieldAnswers);
-    console.log('report id', reportId);
-
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
-    if (sectionFieldResponseArray.length === sectionFields?.length) {
+    if (sectionFieldResponseArray.length > 0) {
       const isUpdating = !!existingReportId;
       createSectionFieldResponseMutation.mutate(
         { reportData: sectionFieldResponseArray, isUpdate: isUpdating },
         {
           onSuccess: () => {
-            console.log('Section field responses saved successfully');
             alert('Fremdrift gemt!');
+            navigate({ to: '/frontpage' });
           },
         },
       );
+    } else {
+      alert('Ingen svar at gemme endnu');
     }
   };
 
   const completeReportMutation = useCompleteReport();
 
   const handleSubmitReport = () => {
-    console.log('All section field answers:', sectionFieldAnswers);
-    console.log('report id', reportId);
-
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
     if (sectionFieldResponseArray.length !== sectionFields?.length) {
@@ -289,7 +280,6 @@ function RouteComponent() {
         navigate({ to: '/frontpage' });
       },
     });
-    console.log('Submitting report with answers:', sectionFieldAnswers);
   };
 
   return (
