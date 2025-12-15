@@ -6,11 +6,14 @@ import type { Report } from '../types/report';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const fetchUnfinishedReports = async (): Promise<Report | undefined> => {
-  const response = await axios.get<Report[]>(`${API_URL}/report?isCompleted=false`, {
-    headers: {
-      Authorization: `Bearer ${keycloak.token}`,
+  const response = await axios.get<Report[]>(
+    `${API_URL}/report?isCompleted=false`,
+    {
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`,
+      },
     },
-  });
+  );
   console.log('unfinished reports response', response.data[0]);
   return response.data[0];
 };

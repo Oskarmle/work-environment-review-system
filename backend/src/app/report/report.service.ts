@@ -11,7 +11,18 @@ export class ReportService {
     private reportRepository: Repository<Report>,
   ) {}
 
-  async create(createReportDto: CreateReportDto): Promise<Report> {
+  async create(createReportDto: CreateReportDto): Promise<Report | Error> {
+    const unfinishedReport = await this.reportRepository.findOne({
+      where: {
+        userId: createReportDto.userId,
+        isCompleted: false,
+      },
+    });
+
+    if (unfinishedReport) {
+      return Error('User has an unfinished report');
+    }
+
     const { focusAreaId, ...reportData } = createReportDto;
 
     const report = this.reportRepository.create({
