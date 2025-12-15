@@ -7,7 +7,13 @@ export const useCreateESectionFieldResponse = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   return useMutation({
-    mutationFn: async (reportData: ReportResponse[]) => {
+    mutationFn: async ({
+      reportData,
+      isUpdate = false,
+    }: {
+      reportData: ReportResponse[];
+      isUpdate?: boolean;
+    }) => {
       const formData = new FormData();
 
       const responsesWithoutImages = reportData.map((response) => {
@@ -25,7 +31,8 @@ export const useCreateESectionFieldResponse = () => {
         }
       });
 
-      const response = await axios.post(
+      const method = isUpdate ? 'put' : 'post';
+      const response = await axios[method](
         `${API_URL}/section-field-response`,
         formData,
         {
