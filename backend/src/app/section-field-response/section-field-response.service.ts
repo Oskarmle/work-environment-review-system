@@ -34,6 +34,13 @@ export class SectionFieldResponseService {
     return this.sectionFieldResponseRepository.save(sectionFieldResponse);
   }
 
+  async findAllForAReport(reportId: string): Promise<SectionFieldResponse[]> {
+    return this.sectionFieldResponseRepository.find({
+      where: { report: { id: reportId } },
+      relations: ['sectionField'],
+    });
+  }
+
   async createMany(
     createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
     files?: UploadedFile[],
@@ -69,5 +76,24 @@ export class SectionFieldResponseService {
     return this.sectionFieldResponseRepository.find({
       where: ids.map((id: string) => ({ id })),
     });
+  }
+
+  async updateSectionFieldResponses(
+    createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
+    files?: UploadedFile[],
+  ): Promise<SectionFieldResponse[]> {
+    // First, get the reportId from the first dto (all should have the same reportId)
+    const reportId = createSectionFieldResponseDtos[0]?.reportId;
+    if (!reportId) {
+      throw new Error('Report ID is required for upsert');
+    }
+
+    // Delete existing responses for this report
+    await this.sectionFieldResponseRepository.delete({
+      report: { id: reportId },
+    });
+
+    // Then create new ones
+    return this.createMany(createSectionFieldResponseDtos, files);
   }
 }

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 
@@ -12,12 +20,32 @@ export class ReportController {
   }
 
   @Get()
-  async findAll() {
-    return await this.reportService.findAll();
+  async findAll(@Query('isCompleted') isCompleted?: string) {
+    const isCompletedBool =
+      isCompleted === 'true'
+        ? true
+        : isCompleted === 'false'
+          ? false
+          : undefined;
+    return await this.reportService.findAll(isCompletedBool);
+  }
+
+  @Get('user/:userId')
+  async findAllByUserId(
+    @Param('userId') userId: string,
+    @Query('isCompleted') isCompleted?: string,
+  ) {
+    const isCompletedBool =
+      isCompleted === 'true'
+        ? true
+        : isCompleted === 'false'
+          ? false
+          : undefined;
+    return await this.reportService.findByUserId(userId, isCompletedBool);
   }
 
   @Get(':id')
-  async findOne(@Body('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return await this.reportService.findOne({ where: { id } });
   }
 

@@ -6,7 +6,6 @@ import keycloak from '../utils/keycloak';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const fetchActiveFocusArea = async (): Promise<FocusArea> => {
-  await keycloak.updateToken(5); // Refresh token if it expires in 5 seconds
   const response = await axios.get(`${API_URL}/focus-area/active`, {
     headers: {
       Authorization: `Bearer ${keycloak.token}`,

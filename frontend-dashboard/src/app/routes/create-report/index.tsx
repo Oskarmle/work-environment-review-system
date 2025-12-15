@@ -3,7 +3,7 @@ import Logo from '../../../components/logo/Logo';
 import { Card, CardContent, type SelectChangeEvent } from '@mui/material';
 import CreateReview from '../../../components/create-review/Create-review';
 import styles from './create-report.module.css';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
@@ -14,14 +14,22 @@ import type { Dayjs } from 'dayjs';
 import { useCreateESectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 import { useCompleteReport } from '../../../hooks/useCompleteReport';
+import keycloak from '../../../utils/keycloak';
+import { useGetSectionFieldResponse } from '../../../hooks/useGetSectionFieldResponse';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
+  validateSearch: (search: Record<string, unknown>): { reportId?: string } => {
+    return {
+      reportId: search.reportId as string | undefined,
+    };
+  },
 });
 
 function RouteComponent() {
   useCheckAuthentication();
   const navigate = useNavigate();
+  const { reportId: existingReportId } = Route.useSearch();
 
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
   const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
@@ -36,7 +44,78 @@ function RouteComponent() {
   );
   const [focusAreaChecked, setFocusAreaChecked] = useState<boolean>(false);
   const [comment, setComment] = useState<string>('');
-  const [reportId, setReportId] = useState<string | null>(null);
+  const [reportId, setReportId] = useState<string | null>(
+    existingReportId || null,
+  );
+
+  const { data: existingResponses } = useGetSectionFieldResponse(
+    existingReportId || '',
+  );
+
+  useEffect(() => {
+    if (existingResponses && existingResponses.length > 0 && existingReportId) {
+      const prefilledAnswers: Record<string, ReportResponse> = {};
+
+      existingResponses.forEach((response) => {
+        const sectionFieldId =
+          typeof response.sectionFieldId === 'string'
+            ? response.sectionFieldId
+            : (response as any).sectionField?.id;
+
+        if (!sectionFieldId) {
+          console.warn('Missing sectionFieldId for response:', response);
+          return;
+        }
+
+        let imageFile: File | null = null;
+        if (
+          response.imageData &&
+          response.imageFileName &&
+          response.imageMimeType
+        ) {
+          try {
+            let base64Data = response.imageData;
+
+            if (
+              typeof base64Data !== 'string' &&
+              (response.imageData as any).type === 'Buffer'
+            ) {
+              const uint8Array = new Uint8Array(
+                (response.imageData as any).data,
+              );
+              base64Data = btoa(String.fromCharCode(...uint8Array));
+            }
+
+            const byteCharacters = atob(base64Data as string);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+              type: response.imageMimeType,
+            });
+            imageFile = new File([blob], response.imageFileName, {
+              type: response.imageMimeType,
+            });
+          } catch (error) {
+            console.error('Error converting image data:', error);
+          }
+        }
+
+        prefilledAnswers[sectionFieldId] = {
+          sectionFieldId: sectionFieldId,
+          reportId: existingReportId,
+          isOkay: response.isOkay,
+          isNotRelevant: response.isNotRelevant,
+          comment: response.comment || '',
+          image: imageFile,
+        };
+      });
+
+      setSectionFieldAnswers(prefilledAnswers);
+    }
+  }, [existingResponses, existingReportId]);
 
   const sectionRelevantStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
@@ -115,21 +194,27 @@ function RouteComponent() {
   const { data: focusAreaData } = useGetActiveFocusArea();
 
   const handleBeginReview = () => {
-    if (!date || !focusAreaData || !focusAreaChecked || !initialChecks) {
+    // FIXME: Replace with actual user and station IDs from user data
+    // const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
+    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
+    const userId = keycloak.tokenParsed?.sub;
+
+    if (
+      !date ||
+      !focusAreaData ||
+      !focusAreaChecked ||
+      !initialChecks ||
+      !userId
+    ) {
       console.error('Missing required fields');
       return;
     }
-
-    // FIXME: Replace with actual user and station IDs from user data
-    const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
-    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
 
     const reportData = {
       isCompleted: false,
       focusAreaId: focusAreaData.id,
       stationId: stationId,
       comment: comment,
-      reportBeganAt: date.format('YYYY-MM-DD'),
       userId: userId,
     };
 
@@ -160,27 +245,27 @@ function RouteComponent() {
   const createSectionFieldResponseMutation = useCreateESectionFieldResponse();
 
   const handleSaveProgress = () => {
-    console.log('Section field answers:', sectionFieldAnswers);
-    console.log('report id', reportId);
-
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
-    if (sectionFieldResponseArray.length === sectionFields?.length) {
-      createSectionFieldResponseMutation.mutate(sectionFieldResponseArray, {
-        onSuccess: () => {
-          console.log('Section field responses saved successfully');
-          alert('Fremdrift gemt!');
+    if (sectionFieldResponseArray.length > 0) {
+      const isUpdating = !!existingReportId;
+      createSectionFieldResponseMutation.mutate(
+        { reportData: sectionFieldResponseArray, isUpdate: isUpdating },
+        {
+          onSuccess: () => {
+            alert('Fremdrift gemt!');
+            navigate({ to: '/frontpage' });
+          },
         },
-      });
+      );
+    } else {
+      alert('Ingen svar at gemme endnu');
     }
   };
 
   const completeReportMutation = useCompleteReport();
 
   const handleSubmitReport = () => {
-    console.log('All section field answers:', sectionFieldAnswers);
-    console.log('report id', reportId);
-
     const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
 
     if (sectionFieldResponseArray.length !== sectionFields?.length) {
@@ -189,13 +274,25 @@ function RouteComponent() {
       );
       return;
     }
-    completeReportMutation.mutate(reportId ?? '', {
-      onSuccess: () => {
-        alert('Rapport indsendt!');
-        navigate({ to: '/frontpage' });
+
+    const isUpdating = !!existingReportId;
+    createSectionFieldResponseMutation.mutate(
+      { reportData: sectionFieldResponseArray, isUpdate: isUpdating },
+      {
+        onSuccess: () => {
+          completeReportMutation.mutate(reportId ?? '', {
+            onSuccess: () => {
+              alert('Rapport indsendt!');
+              navigate({ to: '/frontpage' });
+            },
+          });
+        },
+        onError: (error) => {
+          console.error('Error saving section field responses:', error);
+          alert('Fejl ved gemning af svar');
+        },
       },
-    });
-    console.log('Submitting report with answers:', sectionFieldAnswers);
+    );
   };
 
   return (
