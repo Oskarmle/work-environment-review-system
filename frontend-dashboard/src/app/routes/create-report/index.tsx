@@ -38,6 +38,7 @@ function RouteComponent() {
   const { data: sectionFields } = useGetSectionsFields();
 
   const [user, setUser] = useState<string[]>([]);
+  const [emails, setEmails] = useState<string[]>([]);
   const [date, setDate] = useState<Dayjs | null>(null);
   const [initialChecks, setInitialChecks] = useState<Record<string, boolean>>(
     {},
@@ -216,6 +217,7 @@ function RouteComponent() {
       stationId: stationId,
       comment: comment,
       userId: userId,
+      emails: emails,
     };
 
     createReportMutation.mutate(reportData, {
@@ -225,6 +227,7 @@ function RouteComponent() {
 
         setDate(null);
         setUser([]);
+        setEmails([]);
         setInitialChecks({});
         setFocusAreaChecked(false);
         setComment('');
@@ -315,6 +318,8 @@ function RouteComponent() {
                   setFocusAreaChecked={setFocusAreaChecked}
                   comment={comment}
                   setComment={setComment}
+                  emails={emails}
+                  setEmails={setEmails}
                 />
               </CardContent>
             </Card>

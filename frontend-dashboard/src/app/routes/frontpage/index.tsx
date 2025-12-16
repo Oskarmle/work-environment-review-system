@@ -1,14 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import Logo from '../../../components/logo/Logo';
-import {
-  Button,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material';
+import { Button, Card, CardContent } from '@mui/material';
 import styles from './frontpage.module.css';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
 import { useGetUnfinishedReports } from '../../../hooks/useGetUnfinishedReports';
@@ -51,7 +43,7 @@ function RouteComponent() {
             <CardContent className={styles['card-content']}>
               <div>
                 <h3>Fortsæt rundering</h3>
-                {/* FIXME: Set station from user instead of static */}
+                {/* FIXME: Set station from report instead of static */}
                 <p>Station Dragør</p>
               </div>
               <Button

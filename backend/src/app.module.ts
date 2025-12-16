@@ -16,6 +16,7 @@ import {
   AuthGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { KeycloakModule } from './app/keycloak/keycloak.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { APP_GUARD } from '@nestjs/core';
     SectionFieldModule,
     SectionFieldResponseModule,
     InitialCheckModule,
+    KeycloakModule,
   ],
   providers: [
     {
