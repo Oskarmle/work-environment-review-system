@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const fetchUnfinishedReports = async (): Promise<Report | null> => {
   const response = await axios.get<Report[]>(
-    `${API_URL}/report?isCompleted=false`,
+    `${API_URL}/report/user/${keycloak.tokenParsed?.sub}?isCompleted=false`,
     {
       headers: {
         Authorization: `Bearer ${keycloak.token}`,
