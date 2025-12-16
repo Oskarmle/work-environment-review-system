@@ -21,11 +21,7 @@ function RouteComponent() {
       <div className={styles.card}>
         <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
           <CardContent className={styles['card-content']}>
-            <div>
-              <h3>Ny rundering</h3>
-              {/* FIXME: Set station in report creation */}
-              <p>Station Dragør</p>
-            </div>
+            <h3>Ny rundering</h3>
             <Button
               type="submit"
               variant="contained"
@@ -41,11 +37,7 @@ function RouteComponent() {
         {unfinishedReport?.isCompleted === false && (
           <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
             <CardContent className={styles['card-content']}>
-              <div>
-                <h3>Fortsæt rundering</h3>
-                {/* FIXME: Set station from report instead of static */}
-                <p>Station Dragør</p>
-              </div>
+              <h3>Fortsæt rundering</h3>
               <Button
                 type="submit"
                 variant="contained"

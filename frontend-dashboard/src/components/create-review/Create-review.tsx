@@ -87,11 +87,7 @@ const CreateReview = ({
 
   return (
     <div className={styles.createReview}>
-      <div>
-        <h3>Ny arbejdsmiljørundering</h3>
-        {/* FIXME: Add station based on user data from db */}
-        <p>Station Dragør</p>
-      </div>
+      <h3>Ny arbejdsmiljørundering</h3>
       <div className={styles.addDateAndUser}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker label="Vælg dato" value={date} onChange={setDate} />
