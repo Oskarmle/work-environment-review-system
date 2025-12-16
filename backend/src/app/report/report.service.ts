@@ -23,7 +23,9 @@ export class ReportService {
       return Error('User has an unfinished report');
     }
 
-    const { focusAreaId, stationId, ...reportData } = createReportDto;
+    const { focusAreaId, stationId, emails, ...reportData } = createReportDto;
+
+    console.log('Creating report with emails:', emails);
 
     const report = this.reportRepository.create({
       ...reportData,
