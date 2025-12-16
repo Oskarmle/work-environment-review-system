@@ -22,6 +22,7 @@ import type { InitialCheck } from '../../types/initial-check';
 import { useGetActiveFocusArea } from '../../hooks/useGetActiveFocusArea';
 import { useGetUsers } from '../../hooks/useGetUsers';
 import type { Dayjs } from 'dayjs';
+import { useGetStations } from '../../hooks/useGetStations';
 
 type CreateReviewProps = {
   handleBeginReview: () => void;
@@ -39,6 +40,8 @@ type CreateReviewProps = {
   setComment: (value: string) => void;
   emails: string[];
   setEmails: React.Dispatch<React.SetStateAction<string[]>>;
+  station: string;
+  handleStationChange: (event: SelectChangeEvent<string>) => void;
 };
 
 const CreateReview = ({
@@ -55,12 +58,20 @@ const CreateReview = ({
   setComment,
   emails,
   setEmails,
+  station,
+  handleStationChange,
 }: CreateReviewProps) => {
   const {
     data: users,
     isLoading: usersLoading,
     isError: usersError,
   } = useGetUsers();
+
+  const {
+    data: stationsData,
+    isLoading: stationsLoading,
+    isError: stationsError,
+  } = useGetStations();
 
   const {
     data: initialChecksData,
@@ -76,11 +87,7 @@ const CreateReview = ({
 
   return (
     <div className={styles.createReview}>
-      <div>
-        <h3>Ny arbejdsmiljørundering</h3>
-        {/* FIXME: Add station based on user data from db */}
-        <p>Station Dragør</p>
-      </div>
+      <h3>Ny arbejdsmiljørundering</h3>
       <div className={styles.addDateAndUser}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker label="Vælg dato" value={date} onChange={setDate} />
@@ -101,14 +108,14 @@ const CreateReview = ({
             {users?.map((u) => {
               const userName = u.firstName + ' ' + u.lastName;
               const isChecked = user.includes(userName);
-              
+
               return (
-                <MenuItem 
-                  key={u.id} 
+                <MenuItem
+                  key={u.id}
                   value={userName}
                   onClick={() => {
                     if (isChecked) {
-                      setEmails(emails.filter(email => email !== u.email));
+                      setEmails(emails.filter((email) => email !== u.email));
                     } else {
                       setEmails([...emails, u.email]);
                     }
@@ -119,6 +126,26 @@ const CreateReview = ({
                 </MenuItem>
               );
             })}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel>Vælg station</InputLabel>
+          <Select
+            labelId="select-stations-label"
+            id="select-stations"
+            value={station}
+            onChange={handleStationChange}
+            input={<OutlinedInput label="Vælg station" />}
+          >
+            {stationsLoading && <MenuItem disabled>Loading...</MenuItem>}
+            {stationsError && (
+              <MenuItem disabled>Error loading stations</MenuItem>
+            )}
+            {stationsData?.map((s) => (
+              <MenuItem key={s.id} value={s.id}>
+                <ListItemText primary={s.stationName} />
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>

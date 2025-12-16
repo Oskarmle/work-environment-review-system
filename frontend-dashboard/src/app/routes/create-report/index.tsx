@@ -39,6 +39,8 @@ function RouteComponent() {
 
   const [user, setUser] = useState<string[]>([]);
   const [emails, setEmails] = useState<string[]>([]);
+  const [station, setStation] = useState<string>('');
+  const [stationId, setStationId] = useState<string>('');
   const [date, setDate] = useState<Dayjs | null>(null);
   const [initialChecks, setInitialChecks] = useState<Record<string, boolean>>(
     {},
@@ -195,9 +197,6 @@ function RouteComponent() {
   const { data: focusAreaData } = useGetActiveFocusArea();
 
   const handleBeginReview = () => {
-    // FIXME: Replace with actual user and station IDs from user data
-    // const userId = '2e0809aa-5e16-49c9-bd4a-4005cf862b45';
-    const stationId = 'b27cd2c1-4fae-4cc5-8675-8c7331aa99a1';
     const userId = keycloak.tokenParsed?.sub;
 
     if (
@@ -231,6 +230,8 @@ function RouteComponent() {
         setInitialChecks({});
         setFocusAreaChecked(false);
         setComment('');
+        setStation('');
+        setStationId('');
         alert('Rundering startet!');
       },
     });
@@ -241,6 +242,12 @@ function RouteComponent() {
       target: { value },
     } = event;
     setUser(typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const handleStationChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    setStation(value);
+    setStationId(value);
   };
 
   const createReportMutation = useCreateReport();
@@ -320,6 +327,8 @@ function RouteComponent() {
                   setComment={setComment}
                   emails={emails}
                   setEmails={setEmails}
+                  station={station}
+                  handleStationChange={handleStationChange}
                 />
               </CardContent>
             </Card>
