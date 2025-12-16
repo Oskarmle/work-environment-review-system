@@ -37,6 +37,8 @@ type CreateReviewProps = {
   setFocusAreaChecked: (value: boolean) => void;
   comment: string;
   setComment: (value: string) => void;
+  emails: string[];
+  setEmails: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const CreateReview = ({
@@ -51,6 +53,8 @@ const CreateReview = ({
   setFocusAreaChecked,
   comment,
   setComment,
+  emails,
+  setEmails,
 }: CreateReviewProps) => {
   const {
     data: users,
@@ -94,14 +98,27 @@ const CreateReview = ({
           >
             {usersLoading && <MenuItem disabled>Loading...</MenuItem>}
             {usersError && <MenuItem disabled>Error loading users</MenuItem>}
-            {users?.map((u) => (
-              <MenuItem key={u.id} value={u.firstName + ' ' + u.lastName}>
-                <Checkbox
-                  checked={user.includes(u.firstName + ' ' + u.lastName)}
-                />
-                <ListItemText primary={u.firstName + ' ' + u.lastName} />
-              </MenuItem>
-            ))}
+            {users?.map((u) => {
+              const userName = u.firstName + ' ' + u.lastName;
+              const isChecked = user.includes(userName);
+              
+              return (
+                <MenuItem 
+                  key={u.id} 
+                  value={userName}
+                  onClick={() => {
+                    if (isChecked) {
+                      setEmails(emails.filter(email => email !== u.email));
+                    } else {
+                      setEmails([...emails, u.email]);
+                    }
+                  }}
+                >
+                  <Checkbox checked={isChecked} />
+                  <ListItemText primary={userName} />
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
       </div>
