@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateReportDto {
   @IsOptional()
@@ -12,6 +18,14 @@ export class CreateReportDto {
   @IsNotEmpty()
   @IsString()
   focusAreaId: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  emails: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  stationId: string;
 
   @IsString()
   @IsNotEmpty()

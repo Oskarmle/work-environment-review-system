@@ -3,7 +3,8 @@ import Logo from '../../../components/logo/Logo';
 import { Button, Card, CardContent } from '@mui/material';
 import styles from './frontpage.module.css';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
-import { useGetUnfinishedReports } from '../../../hooks/useGetUnfinishedReport';
+import { useGetUnfinishedReports } from '../../../hooks/useGetUnfinishedReports';
+import ReportList from '../../../components/report-list/Report-list';
 
 export const Route = createFileRoute('/frontpage/')({
   component: RouteComponent,
@@ -42,7 +43,7 @@ function RouteComponent() {
             <CardContent className={styles['card-content']}>
               <div>
                 <h3>Fortsæt rundering</h3>
-                {/* FIXME: Set station from user instead of static */}
+                {/* FIXME: Set station from report instead of static */}
                 <p>Station Dragør</p>
               </div>
               <Button
@@ -57,6 +58,12 @@ function RouteComponent() {
             </CardContent>
           </Card>
         )}
+        <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
+          <CardContent className={styles['card-content']}>
+            <h3>Se dine rapporter</h3>
+            <ReportList />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

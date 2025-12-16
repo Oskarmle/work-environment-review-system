@@ -3,7 +3,7 @@ import type { ReportResponse } from '../types/report-response';
 import axios from 'axios';
 import keycloak from '../utils/keycloak';
 
-export const useCreateESectionFieldResponse = () => {
+export const useCreateSectionFieldResponse = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   return useMutation({
