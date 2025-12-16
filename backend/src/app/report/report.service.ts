@@ -25,6 +25,7 @@ export class ReportService {
 
     const { focusAreaId, stationId, emails, ...reportData } = createReportDto;
 
+    // FIXME: Implement actual email sending logic
     console.log('Creating report with emails:', emails);
 
     const report = this.reportRepository.create({
