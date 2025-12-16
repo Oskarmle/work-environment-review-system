@@ -32,7 +32,25 @@ export class KeycloakService {
     });
   }
 
+  private async ensureAuthenticated() {
+    this.kcAdminClient.setConfig({
+      realmName: 'master',
+    });
+
+    await this.kcAdminClient.auth({
+      username: process.env.KEYCLOAK_ADMIN_USERNAME,
+      password: process.env.KEYCLOAK_ADMIN_PASSWORD,
+      grantType: 'password',
+      clientId: 'admin-cli',
+    });
+
+    this.kcAdminClient.setConfig({
+      realmName: process.env.KEYCLOAK_REALM,
+    });
+  }
+
   async getUsers() {
+    await this.ensureAuthenticated();
     return await this.kcAdminClient.users.find();
   }
 }
