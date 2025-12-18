@@ -17,6 +17,7 @@ import {
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
 import { KeycloakModule } from './app/keycloak/keycloak.module';
+import { MailModule } from './app/mail/mail.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { KeycloakModule } from './app/keycloak/keycloak.module';
     SectionFieldResponseModule,
     InitialCheckModule,
     KeycloakModule,
+    MailModule,
   ],
   providers: [
     {
