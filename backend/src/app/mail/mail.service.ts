@@ -1,38 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import FormData from 'form-data';
-
-interface MessagesSendResult {
-  id: string;
-  message: string;
-  status?: number;
-}
-
-interface EmailOptions {
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-}
-
-// FIXME: add attachment support
-interface MailgunMessageData {
-  from: string;
-  to: string | string[];
-  subject: string;
-  text?: string;
-  html?: string;
-  [key: string]: unknown;
-}
-
-interface MailgunClient {
-  messages: {
-    create: (
-      domain: string,
-      data: MailgunMessageData,
-    ) => Promise<MessagesSendResult>;
-  };
-}
+import { EmailOptions, MailgunClient, MessagesSendResult } from './types/mail';
 
 @Injectable()
 export class MailService implements OnModuleInit {
