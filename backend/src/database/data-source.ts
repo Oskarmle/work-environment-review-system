@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { User } from 'src/app/user/entities/user.entity';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { Report } from 'src/app/report/entities/report.entity';
 import { Section } from 'src/app/section/entities/section.entity';
@@ -10,6 +9,7 @@ import { SectionField } from 'src/app/section-field/entities/section-field.entit
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
 import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 import { Station } from 'src/app/station/entity/station.entity';
+import { Mail } from 'src/app/mail/entities/mail.entity';
 
 dotenv.config();
 
@@ -22,7 +22,6 @@ export const dbConfig: TypeOrmModuleOptions = {
       : false,
   synchronize: false,
   entities: [
-    User,
     FocusArea,
     Report,
     Station,
@@ -30,6 +29,7 @@ export const dbConfig: TypeOrmModuleOptions = {
     SectionField,
     SectionFieldResponse,
     InitialCheck,
+    Mail,
   ],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
 };
