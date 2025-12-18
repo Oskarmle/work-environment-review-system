@@ -23,15 +23,17 @@ export class ReportService {
       return Error('User has an unfinished report');
     }
 
-    const { focusAreaId, stationId, emails, ...reportData } = createReportDto;
+    const { focusAreaId, stationId, notificationEmails, ...reportData } =
+      createReportDto;
 
     // FIXME: Implement actual email sending logic
-    console.log('Creating report with emails:', emails);
+    console.log('Creating report with emails:', notificationEmails);
 
     const report = this.reportRepository.create({
       ...reportData,
       focusArea: { id: focusAreaId },
       station: { id: stationId },
+      notificationEmails: notificationEmails || [],
     });
     return this.reportRepository.save(report);
   }
@@ -71,6 +73,20 @@ export class ReportService {
     }
 
     report.isCompleted = true;
+
+    if (
+      report.notificationEmails &&
+      report.notificationEmails.length > 0 &&
+      report.isCompleted === true
+    ) {
+      // TODO: Implement email sending
+      console.log(
+        'Sending completion notification to:',
+        report.notificationEmails,
+      );
+    }
+
+    report.notificationEmails = [];
     return this.reportRepository.save(report);
   }
 }
