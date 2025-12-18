@@ -36,6 +36,9 @@ export class Report {
   @Column()
   userId: string;
 
+  @Column('simple-array', { nullable: true })
+  notificationEmails: string[];
+
   @ManyToOne(() => Station, (station) => station.reports)
   station: Station;
 
