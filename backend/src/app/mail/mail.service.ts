@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import FormData from 'form-data';
 
@@ -15,6 +15,7 @@ interface EmailOptions {
   html?: string;
 }
 
+// FIXME: add attachment support
 interface MailgunMessageData {
   from: string;
   to: string | string[];
@@ -34,51 +35,47 @@ interface MailgunClient {
 }
 
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
   private readonly logger = new Logger(MailService.name);
   private mailgunClient: MailgunClient;
-  private initialized = false;
+  private readonly domain: string;
+  private readonly from: string;
+  private initPromise: Promise<void>;
 
   constructor(private readonly config: ConfigService) {
-    void this.initializeMailgun();
+    const apiKey = this.config.get<string>('MAILGUN_API_KEY');
+    this.domain = this.config.get<string>('MAILGUN_DOMAIN')!;
+
+    if (!apiKey || !this.domain) {
+      throw new Error('MAILGUN_API_KEY and MAILGUN_DOMAIN must be configured');
+    }
+
+    this.from =
+      this.config.get<string>('MAILGUN_FROM_EMAIL') || `noreply@${this.domain}`;
+
+    this.initPromise = this.initializeMailgun(apiKey);
   }
 
-  private async initializeMailgun() {
+  async onModuleInit() {
+    await this.initPromise;
+  }
+
+  private async initializeMailgun(apiKey: string) {
     const Mailgun = (await import('mailgun.js')).default;
     const mailgun = new Mailgun(FormData);
-    const domain = process.env.MAILGUN_DOMAIN;
-    const apiKey = process.env.MAILGUN_API_KEY;
-
-    if (!apiKey || !domain) {
-      this.logger.warn('Mailgun credentials not configured');
-    }
-
     this.mailgunClient = mailgun.client({
       username: 'api',
-      key: apiKey || '',
+      key: apiKey,
     }) as MailgunClient;
-    this.initialized = true;
-  }
-
-  private async ensureInitialized() {
-    if (!this.initialized) {
-      await this.initializeMailgun();
-    }
+    this.logger.log('Mailgun client initialized');
   }
 
   async sendEmail(options: EmailOptions): Promise<MessagesSendResult> {
-    await this.ensureInitialized();
-
-    const domain = this.config.get<string>('MAILGUN_DOMAIN');
-    if (!domain) {
-      throw new Error('MAILGUN_DOMAIN is not configured');
-    }
-
-    const from = process.env.MAILGUN_FROM_EMAIL || `noreply@${domain}`;
+    await this.initPromise;
 
     try {
-      const response = await this.mailgunClient.messages.create(domain, {
-        from,
+      const response = await this.mailgunClient.messages.create(this.domain, {
+        from: this.from,
         to: options.to,
         subject: options.subject,
         text: options.text,
