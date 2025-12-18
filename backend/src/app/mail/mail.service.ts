@@ -1,7 +1,11 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import FormData from 'form-data';
-import { EmailOptions, MailgunClient, MessagesSendResult } from './types/mail';
+import {
+  EmailOptions,
+  MailgunClient,
+  MessagesSendResult,
+} from 'src/types/mail';
 
 @Injectable()
 export class MailService implements OnModuleInit {
