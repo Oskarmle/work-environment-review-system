@@ -4,6 +4,7 @@ export type CreateReport = {
   stationId: string;
   comment?: string;
   userId: string;
+  notificationEmails?: string[];
 };
 
 export type Report = {
@@ -17,6 +18,7 @@ export type Report = {
     id: string;
     stationName: string;
   };
+  notificationEmails?: string[];
   comment?: string;
   userId: string;
   createdAt: string;

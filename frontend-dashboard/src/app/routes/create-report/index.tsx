@@ -216,7 +216,7 @@ function RouteComponent() {
       stationId: stationId,
       comment: comment,
       userId: userId,
-      emails: emails,
+      notificationEmails: emails,
     };
 
     createReportMutation.mutate(reportData, {
