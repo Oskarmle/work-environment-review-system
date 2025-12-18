@@ -9,7 +9,6 @@ import { SectionField } from 'src/app/section-field/entities/section-field.entit
 import { SectionFieldResponse } from 'src/app/section-field-response/entities/section-field-response.entity';
 import { InitialCheck } from 'src/app/initial-check/entities/initial-check.entity';
 import { Station } from 'src/app/station/entity/station.entity';
-import { Mail } from 'src/app/mail/entities/mail.entity';
 
 dotenv.config();
 
@@ -29,7 +28,6 @@ export const dbConfig: TypeOrmModuleOptions = {
     SectionField,
     SectionFieldResponse,
     InitialCheck,
-    Mail,
   ],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
 };
