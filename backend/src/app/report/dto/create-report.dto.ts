@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -19,9 +20,10 @@ export class CreateReportDto {
   @IsString()
   focusAreaId: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
-  emails: string[];
+  @IsEmail({}, { each: true })
+  notificationEmails?: string[];
 
   @IsNotEmpty()
   @IsString()
