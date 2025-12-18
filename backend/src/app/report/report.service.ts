@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Report } from './entities/report.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateReportDto } from './dto/create-report.dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReportService {
   constructor(
     @InjectRepository(Report)
     private reportRepository: Repository<Report>,
+    private mailService: MailService,
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report | Error> {
@@ -23,10 +25,7 @@ export class ReportService {
       return Error('User has an unfinished report');
     }
 
-    const { focusAreaId, stationId, emails, ...reportData } = createReportDto;
-
-    // FIXME: Implement actual email sending logic
-    console.log('Creating report with emails:', emails);
+    const { focusAreaId, stationId, ...reportData } = createReportDto;
 
     const report = this.reportRepository.create({
       ...reportData,
@@ -60,6 +59,7 @@ export class ReportService {
   async markAsCompleted(reportId: string): Promise<Report> {
     const report = await this.reportRepository.findOne({
       where: { id: reportId },
+      relations: ['station'],
     });
 
     if (!report) {
@@ -71,6 +71,28 @@ export class ReportService {
     }
 
     report.isCompleted = true;
+
+    if (
+      report.notificationEmails &&
+      report.notificationEmails.length > 0 &&
+      report.isCompleted === true
+    ) {
+      // FIXME: Implement email sending
+      console.log(
+        'Sending completion notification to:',
+        report.notificationEmails,
+      );
+
+      report.notificationEmails.forEach((email) => {
+        void this.mailService.sendEmail({
+          to: email,
+          subject: 'Report Completed',
+          text: `Rundering på ${report.station.stationName} er nu fuldført. Mail er sendt til ${report.notificationEmails?.join(', ')}.`,
+        });
+      });
+    }
+
+    report.notificationEmails = [];
     return this.reportRepository.save(report);
   }
 }

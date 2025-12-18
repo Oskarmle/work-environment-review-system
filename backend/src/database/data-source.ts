@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { User } from 'src/app/user/entities/user.entity';
 import { FocusArea } from 'src/app/focus-area/entities/focus-area.entity';
 import { Report } from 'src/app/report/entities/report.entity';
 import { Section } from 'src/app/section/entities/section.entity';
@@ -22,7 +21,6 @@ export const dbConfig: TypeOrmModuleOptions = {
       : false,
   synchronize: false,
   entities: [
-    User,
     FocusArea,
     Report,
     Station,
