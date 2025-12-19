@@ -4,6 +4,7 @@ import { Report } from './entities/report.entity';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateReportDto } from './dto/create-report.dto';
 import { MailService } from '../mail/mail.service';
+import { PdfService } from '../pdf/pdf.service';
 
 @Injectable()
 export class ReportService {
@@ -11,6 +12,7 @@ export class ReportService {
     @InjectRepository(Report)
     private reportRepository: Repository<Report>,
     private mailService: MailService,
+    private pdfService: PdfService,
   ) {}
 
   async create(createReportDto: CreateReportDto): Promise<Report | Error> {
@@ -77,11 +79,22 @@ export class ReportService {
       report.notificationEmails.length > 0 &&
       report.isCompleted === true
     ) {
+      const pdfReport = await this.pdfService.generatePdf(
+        `Rundering - ${report.station.stationName}`,
+        report.id,
+      );
+
       report.notificationEmails.forEach((email) => {
         void this.mailService.sendEmail({
           to: email,
-          subject: 'Report Completed',
-          text: `Rundering på ${report.station.stationName} er nu fuldført. Mail er sendt til ${report.notificationEmails?.join(', ')}.`,
+          subject: `Rundering færdiggjort - ${report.station.stationName}`,
+          text: `Rundering på ${report.station.stationName} er nu fuldført. Mail er sendt til ${report.notificationEmails?.join(', ')}. Vedhæftet finder du PDF rapporten.`,
+          attachment: [
+            {
+              filename: `Rundering-${report.station.stationName}.pdf`,
+              data: pdfReport,
+            },
+          ],
         });
       });
     }
