@@ -53,6 +53,7 @@ export class MailService implements OnModuleInit {
         subject: options.subject,
         text: options.text,
         html: options.html,
+        attachment: options.attachment,
       });
 
       this.logger.log('Email sent successfully:', response);
