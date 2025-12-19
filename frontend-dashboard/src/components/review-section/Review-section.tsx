@@ -11,7 +11,6 @@ import {
 import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
-import { Field, Form, Formik } from 'formik';
 import type { ReportResponse } from '../../types/report-response';
 
 type ReviewSectionProps = {
@@ -19,6 +18,7 @@ type ReviewSectionProps = {
   setSelectedReview: (review: string | null) => void;
   answers: Record<string, ReportResponse>;
   onAnswerChange: (sectionFieldId: string, answer: ReportResponse) => void;
+  reportId: string;
 };
 
 export type AccordionPreFillProps = {
@@ -34,6 +34,7 @@ const ReviewSection = ({
   setSelectedReview,
   answers,
   onAnswerChange,
+  reportId,
 }: ReviewSectionProps) => {
   const { data: sectionFields, isLoading, isError } = useGetSectionsFields();
 
@@ -59,6 +60,7 @@ const ReviewSection = ({
             {isError && <p>Error loading section fields.</p>}
             {accordionItems.map((sectionField, idx) => {
               const currentAnswer = answers[sectionField.id] || {
+                reportId: reportId,
                 sectionFieldId: sectionField.id,
                 isOkay: false,
                 comment: '',
@@ -119,67 +121,40 @@ const ReviewSection = ({
                         disabled={currentAnswer.isNotRelevant}
                       />
                     </div>
-                    <Formik
-                      initialValues={{
-                        comment: currentAnswer.comment,
-                        isNotRelevant: currentAnswer.isNotRelevant,
-                        image: currentAnswer.image,
-                      }}
-                      enableReinitialize
-                      onSubmit={async (values) => {
-                        console.log(values);
-                      }}
-                    >
-                      <Form>
-                        <div>
-                          <h5>Bemærkninger</h5>
-                          <Field
-                            as="textarea"
-                            name="comment"
-                            disabled={currentAnswer.isOkay}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLTextAreaElement>,
-                            ) => {
-                              onAnswerChange(sectionField.id, {
-                                ...currentAnswer,
-                                comment: e.target.value,
-                              });
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <h5>Billede</h5>
-                          <Field
-                            type="file"
-                            name="imageUrl"
-                            disabled={
-                              currentAnswer.isOkay ||
-                              currentAnswer.isNotRelevant
-                            }
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>,
-                            ) => {
-                              const file = e.target.files?.[0] || null;
-                              onAnswerChange(sectionField.id, {
-                                ...currentAnswer,
-                                image: file,
-                              });
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <h5>Skal ikke tjekkes</h5>
-                          <Field
-                            type="checkbox"
-                            name="isNotRelevant"
-                            disabled={
-                              currentAnswer.isOkay ||
-                              currentAnswer.isNotRelevant
-                            }
-                          />
-                        </div>
-                      </Form>
-                    </Formik>
+                    <div>
+                      <h5>Bemærkninger</h5>
+                      <textarea
+                        disabled={currentAnswer.isOkay}
+                        value={currentAnswer.comment}
+                        onChange={(
+                          e: React.ChangeEvent<HTMLTextAreaElement>,
+                        ) => {
+                          onAnswerChange(sectionField.id, {
+                            ...currentAnswer,
+                            comment: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <h5>Billede</h5>
+                      <input
+                        type="file"
+                        disabled={
+                          currentAnswer.isOkay ||
+                          currentAnswer.isNotRelevant
+                        }
+                        onChange={(
+                          e: React.ChangeEvent<HTMLInputElement>,
+                        ) => {
+                          const file = e.target.files?.[0] || null;
+                          onAnswerChange(sectionField.id, {
+                            ...currentAnswer,
+                            image: file,
+                          });
+                        }}
+                      />
+                    </div>
                     <FormControlLabel
                       control={<Checkbox />}
                       label="Skal ikke tjekkes"
