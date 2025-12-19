@@ -12,7 +12,6 @@ const ReportList = () => {
   const { data: pdfReport } = useGetPdfReport(selectedReportId || '');
 
   const handleReportClick = (report: Report) => {
-    console.log('Report clicked:', report);
     setSelectedReportId(report.id);
   };
 

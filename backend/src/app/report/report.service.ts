@@ -77,12 +77,6 @@ export class ReportService {
       report.notificationEmails.length > 0 &&
       report.isCompleted === true
     ) {
-      // FIXME: Implement email sending
-      console.log(
-        'Sending completion notification to:',
-        report.notificationEmails,
-      );
-
       report.notificationEmails.forEach((email) => {
         void this.mailService.sendEmail({
           to: email,
