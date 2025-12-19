@@ -350,6 +350,7 @@ function RouteComponent() {
               setSelectedReview={setSelectedReview}
               answers={sectionFieldAnswers}
               onAnswerChange={handleAnswerChange}
+              reportId={reportId ?? ''}
             />
           )}
         </div>

@@ -1,6 +1,12 @@
 import { Report } from 'src/app/report/entities/report.entity';
 import { SectionField } from 'src/app/section-field/entities/section-field.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class SectionFieldResponse {
@@ -32,8 +38,10 @@ export class SectionFieldResponse {
     () => SectionField,
     (sectionField) => sectionField.sectionFieldResponses,
   )
+  @JoinColumn({ name: 'sectionFieldId' })
   sectionField: SectionField;
 
   @ManyToOne(() => Report, (report) => report.sectionFieldResponses)
+  @JoinColumn({ name: 'reportId' })
   report: Report;
 }

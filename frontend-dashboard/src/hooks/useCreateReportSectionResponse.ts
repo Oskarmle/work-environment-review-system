@@ -24,7 +24,7 @@ export const useCreateSectionFieldResponse = () => {
       formData.append('responses', JSON.stringify(responsesWithoutImages));
 
       reportData.forEach((response) => {
-        if (response.image) {
+        if (response.image && response.image.size > 0) {
           formData.append('images', response.image);
         } else {
           formData.append('images', new Blob());

@@ -9,6 +9,7 @@ export type EmailOptions = {
   subject: string;
   text?: string;
   html?: string;
+  attachment?: unknown;
 };
 
 // FIXME: add attachment support

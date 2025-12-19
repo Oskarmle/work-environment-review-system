@@ -24,7 +24,6 @@ const CreateFocusAreaModal = (props: CreateFocusAreaModalProps) => {
       year: values.year,
       isActive: true,
     });
-    console.log(values);
     alert('Fokus punkt oprettet');
     handleClose();
   };

@@ -8,5 +8,6 @@ import { SectionFieldResponseService } from './section-field-response.service';
   imports: [TypeOrmModule.forFeature([SectionFieldResponse])],
   controllers: [SectionFieldResponseController],
   providers: [SectionFieldResponseService],
+  exports: [SectionFieldResponseService],
 })
 export class SectionFieldResponseModule {}

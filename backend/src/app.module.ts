@@ -17,6 +17,7 @@ import {
 import { APP_GUARD } from '@nestjs/core';
 import { KeycloakModule } from './app/keycloak/keycloak.module';
 import { MailModule } from './app/mail/mail.module';
+import { PdfModule } from './app/pdf/pdf.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MailModule } from './app/mail/mail.module';
     InitialCheckModule,
     KeycloakModule,
     MailModule,
+    PdfModule,
   ],
   providers: [
     {

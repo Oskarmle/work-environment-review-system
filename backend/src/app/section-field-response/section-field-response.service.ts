@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SectionFieldResponse } from './entities/section-field-response.entity';
 import { Repository } from 'typeorm';
 import { CreateSectionFieldResponseDto } from './dto/create-section-field-response.dto';
-import { SectionFieldResponseType } from 'src/types/response';
 
 interface UploadedFile {
   buffer: Buffer;
@@ -45,37 +44,37 @@ export class SectionFieldResponseService {
     createSectionFieldResponseDtos: CreateSectionFieldResponseDto[],
     files?: UploadedFile[],
   ): Promise<SectionFieldResponse[]> {
-    const entities = createSectionFieldResponseDtos.map((dto, index) => {
+    const insertValues = createSectionFieldResponseDtos.map((dto, index) => {
       const { sectionFieldId, reportId, comment, isNotRelevant, isOkay } = dto;
 
       const file = files?.[index];
 
-      const entityData: SectionFieldResponseType = {
+      const value = {
         comment: comment || '',
         isNotRelevant: isNotRelevant ?? false,
         isOkay: isOkay ?? false,
         sectionField: { id: sectionFieldId },
         report: { id: reportId },
+        ...(file && {
+          imageData: file.buffer,
+          imageMimeType: file.mimetype,
+          imageFileName: file.originalname,
+          imageSize: file.size,
+        }),
       };
 
-      if (file) {
-        entityData.imageData = file.buffer;
-        entityData.imageMimeType = file.mimetype;
-        entityData.imageFileName = file.originalname;
-        entityData.imageSize = file.size;
-      }
-
-      return entityData;
+      return value;
     });
 
-    const result = await this.sectionFieldResponseRepository.insert(entities);
+    const result = await this.sectionFieldResponseRepository
+      .createQueryBuilder()
+      .insert()
+      .into(SectionFieldResponse)
+      .values(insertValues)
+      .returning('*')
+      .execute();
 
-    const ids = result.identifiers.map(
-      (identifier: { id: string }) => identifier.id,
-    );
-    return this.sectionFieldResponseRepository.find({
-      where: ids.map((id: string) => ({ id })),
-    });
+    return result.raw as SectionFieldResponse[];
   }
 
   async updateSectionFieldResponses(
