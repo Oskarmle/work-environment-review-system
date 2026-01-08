@@ -28,7 +28,7 @@ import { PdfModule } from './app/pdf/pdf.module';
       clientId: process.env.KEYCLOAK_CLIENT_ID,
       secret: process.env.KEYCLOAK_SECRET || '',
       policyEnforcement: 'permissive',
-      tokenValidation: 'online',
+      tokenValidation: 'offline',
       useNestLogger: true,
     }),
     TypeOrmModule.forRoot(dbConfig),
