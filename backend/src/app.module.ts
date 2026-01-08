@@ -23,7 +23,7 @@ import { PdfModule } from './app/pdf/pdf.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     KeycloakConnectModule.register({
-      authServerUrl: 'http://localhost:8080',
+      authServerUrl: process.env.KEYCLOAK_BASE_URL || 'http://localhost:8080',
       realm: process.env.KEYCLOAK_REALM,
       clientId: process.env.KEYCLOAK_CLIENT_ID,
       secret: process.env.KEYCLOAK_SECRET || '',
