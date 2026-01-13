@@ -12,6 +12,7 @@ import styles from './review-section.module.css';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { useGetSectionsFields } from '../../hooks/useGetSectionFields';
 import type { ReportResponse } from '../../types/report-response';
+import { useEffect, useMemo } from 'react';
 
 type ReviewSectionProps = {
   selectedReview: string | null;
@@ -42,6 +43,24 @@ const ReviewSection = ({
     ? sectionFields?.filter((field) => field.section.id === selectedReview) ||
       []
     : [];
+
+  // Create object URLs for images and clean them up
+  const imageUrls = useMemo(() => {
+    const urls: Record<string, string> = {};
+    Object.entries(answers).forEach(([key, answer]) => {
+      if (answer.image) {
+        urls[key] = URL.createObjectURL(answer.image);
+      }
+    });
+    return urls;
+  }, [answers]);
+
+  useEffect(() => {
+    // Cleanup object URLs on unmount
+    return () => {
+      Object.values(imageUrls).forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [imageUrls]);
 
   return (
     <Card sx={{ bgcolor: 'primary.main', color: 'background.default' }}>
@@ -163,6 +182,35 @@ const ReviewSection = ({
                           }
                         }}
                       />
+                      {currentAnswer.image && (
+                        <div style={{ marginTop: '10px' }}>
+                          <img
+                            src={imageUrls[sectionField.id] || ''}
+                            alt="Selected"
+                            style={{
+                              maxWidth: '200px',
+                              maxHeight: '200px',
+                              objectFit: 'contain',
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onAnswerChange(sectionField.id, {
+                                ...currentAnswer,
+                                image: null,
+                              });
+                            }}
+                            style={{
+                              marginLeft: '10px',
+                              padding: '5px 10px',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            Fjern billede
+                          </button>
+                        </div>
+                      )}
                     </div>
                     <FormControlLabel
                       control={<Checkbox />}
