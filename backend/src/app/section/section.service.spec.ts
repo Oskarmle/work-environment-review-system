@@ -42,8 +42,7 @@ describe('SectionService', () => {
   describe('create', () => {
     it('should create a new section', async () => {
       const createDto: CreateSectionDto = {
-        name: 'Test Section',
-        description: 'Test description',
+        title: 'Test Section',
       };
       const section = { id: '1', ...createDto };
 
