@@ -44,8 +44,7 @@ describe('InitialCheckService', () => {
   describe('create', () => {
     it('should create a new initial check', async () => {
       const createDto: CreateInitialCheckDto = {
-        title: 'Test Initial Check',
-        description: 'Test description',
+        checkName: 'Test Initial Check',
       };
       const initialCheck = { id: '1', ...createDto };
 
