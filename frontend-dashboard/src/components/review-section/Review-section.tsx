@@ -140,18 +140,27 @@ const ReviewSection = ({
                       <h5>Billede</h5>
                       <input
                         type="file"
+                        accept="image/*"
+                        capture="environment"
                         disabled={
                           currentAnswer.isOkay ||
                           currentAnswer.isNotRelevant
                         }
+                        onClick={(e) => {
+                          // Reset value to ensure onChange fires on iOS/iPad
+                          const target = e.target as HTMLInputElement;
+                          target.value = '';
+                        }}
                         onChange={(
                           e: React.ChangeEvent<HTMLInputElement>,
                         ) => {
                           const file = e.target.files?.[0] || null;
-                          onAnswerChange(sectionField.id, {
-                            ...currentAnswer,
-                            image: file,
-                          });
+                          if (file) {
+                            onAnswerChange(sectionField.id, {
+                              ...currentAnswer,
+                              image: file,
+                            });
+                          }
                         }}
                       />
                     </div>
