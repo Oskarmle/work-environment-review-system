@@ -4,6 +4,8 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../utils/theme';
 import './index.css';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
@@ -27,13 +29,16 @@ function App() {
   useEffect(() => {
     // Refresh token every 60 seconds
     const interval = setInterval(() => {
-      keycloak.updateToken(70).then((refreshed) => {
-        if (refreshed) {
-          console.log('Token refreshed');
-        }
-      }).catch(() => {
-        keycloak.logout();
-      });
+      keycloak
+        .updateToken(70)
+        .then((refreshed) => {
+          if (refreshed) {
+            console.log('Token refreshed');
+          }
+        })
+        .catch(() => {
+          keycloak.logout();
+        });
     }, 60000);
 
     return () => clearInterval(interval);
@@ -42,9 +47,11 @@ function App() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </Provider>
       </QueryClientProvider>
     </StrictMode>
   );
