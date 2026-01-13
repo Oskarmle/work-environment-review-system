@@ -46,7 +46,8 @@ describe('FocusAreaService', () => {
   describe('create', () => {
     it('should create a new focus area with isActive false', async () => {
       const createDto: CreateFocusAreaDto = {
-        name: 'Test Focus Area',
+        title: 'Test Focus Area',
+        year: 2026,
         isActive: false,
       };
       const focusArea = { id: '1', ...createDto };
@@ -63,7 +64,8 @@ describe('FocusAreaService', () => {
 
     it('should deactivate other focus areas when creating an active one', async () => {
       const createDto: CreateFocusAreaDto = {
-        name: 'Active Focus Area',
+        title: 'Active Focus Area',
+        year: 2026,
         isActive: true,
       };
       const focusArea = { id: '1', ...createDto };
