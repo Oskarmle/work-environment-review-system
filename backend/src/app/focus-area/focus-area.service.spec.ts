@@ -1,19 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { FocusAreaService } from './focus-area.service';
+import { FocusArea } from './entities/focus-area.entity';
 import { CreateFocusAreaDto } from './dto/focus-area.dto';
-import { FocusArea } from 'src/types/focus-area';
 
 describe('FocusAreaService', () => {
   let service: FocusAreaService;
+  let repository: Repository<FocusArea>;
 
-  const mockFocusAreaRepository = {
+  const mockRepository = {
     create: jest.fn(),
-    findActiveOne: jest.fn(),
-    findAll: jest.fn(),
-    activeFocusArea: jest.fn(),
-    remove: jest.fn(),
-    update: jest.fn(),
     save: jest.fn(),
+    findOneBy: jest.fn(),
+    find: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -21,65 +23,139 @@ describe('FocusAreaService', () => {
       providers: [
         FocusAreaService,
         {
-          provide: 'FocusAreaRepository',
-          useValue: mockFocusAreaRepository,
+          provide: getRepositoryToken(FocusArea),
+          useValue: mockRepository,
         },
       ],
     }).compile();
 
     service = module.get<FocusAreaService>(FocusAreaService);
+    repository = module.get<Repository<FocusArea>>(
+      getRepositoryToken(FocusArea),
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create method', () => {
-    it('should create new focus area with active set to true', async () => {
-      const newFocusAreaDto: CreateFocusAreaDto = {
-        title: 'New Focus Area',
-        year: 2026,
-        isActive: true,
+  describe('create', () => {
+    it('should create a new focus area with isActive false', async () => {
+      const createDto: CreateFocusAreaDto = {
+        name: 'Test Focus Area',
+        isActive: false,
       };
+      const focusArea = { id: '1', ...createDto };
 
-      mockFocusAreaRepository.create.mockReturnValue(newFocusAreaDto);
-      mockFocusAreaRepository.save.mockResolvedValue(newFocusAreaDto);
+      mockRepository.create.mockReturnValue(focusArea);
+      mockRepository.save.mockResolvedValue(focusArea);
 
-      expect(await service.create(newFocusAreaDto)).toEqual(newFocusAreaDto);
-      expect(mockFocusAreaRepository.create).toHaveBeenCalledWith(
-        newFocusAreaDto,
-      );
-      expect(mockFocusAreaRepository.save).toHaveBeenCalledWith(
-        newFocusAreaDto,
-      );
+      const result = await service.create(createDto);
+
+      expect(mockRepository.create).toHaveBeenCalledWith(createDto);
+      expect(mockRepository.save).toHaveBeenCalledWith(focusArea);
+      expect(result).toEqual(focusArea);
     });
 
-    it('Should set all other focus areas to false', async () => {
-      const newFocusAreaDto: CreateFocusAreaDto = {
-        title: 'New Focus Area',
-        year: 2026,
+    it('should deactivate other focus areas when creating an active one', async () => {
+      const createDto: CreateFocusAreaDto = {
+        name: 'Active Focus Area',
+        isActive: true,
+      };
+      const focusArea = { id: '1', ...createDto };
+
+      mockRepository.create.mockReturnValue(focusArea);
+      mockRepository.save.mockResolvedValue(focusArea);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
+
+      const result = await service.create(createDto);
+
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { isActive: true },
+        { isActive: false },
+      );
+      expect(mockRepository.save).toHaveBeenCalledWith(focusArea);
+      expect(result).toEqual(focusArea);
+    });
+  });
+
+  describe('findActiveOne', () => {
+    it('should return active focus area', async () => {
+      const focusArea = {
+        id: '1',
+        name: 'Active Focus Area',
         isActive: true,
       };
 
-      const newFocusArea: FocusArea = {
-        ...newFocusAreaDto,
-        id: 'new-id-123',
-      };
+      mockRepository.findOneBy.mockResolvedValue(focusArea);
 
-      mockFocusAreaRepository.update.mockImplementation(
-        (criteria, updateData) => {
-          expect(criteria).toEqual({ isActive: true });
-          expect(updateData).toEqual({ isActive: false });
-          return Promise.resolve({ affected: 2, raw: [], generatedMaps: [] });
-        },
+      const result = await service.findActiveOne();
+
+      expect(mockRepository.findOneBy).toHaveBeenCalledWith({
+        isActive: true,
+      });
+      expect(result).toEqual(focusArea);
+    });
+
+    it('should return null when no active focus area exists', async () => {
+      mockRepository.findOneBy.mockResolvedValue(null);
+
+      const result = await service.findActiveOne();
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return all focus areas', async () => {
+      const focusAreas = [
+        { id: '1', name: 'Focus Area 1', isActive: true },
+        { id: '2', name: 'Focus Area 2', isActive: false },
+      ];
+
+      mockRepository.find.mockResolvedValue(focusAreas);
+
+      const result = await service.findAll();
+
+      expect(mockRepository.find).toHaveBeenCalled();
+      expect(result).toEqual(focusAreas);
+    });
+  });
+
+  describe('activeFocusArea', () => {
+    it('should activate a specific focus area', async () => {
+      const id = '1';
+      const focusArea = { id, name: 'Focus Area 1', isActive: true };
+
+      mockRepository.update.mockResolvedValue({ affected: 1 });
+      mockRepository.findOneBy.mockResolvedValue(focusArea);
+
+      const result = await service.activeFocusArea(id);
+
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { isActive: true },
+        { isActive: false },
       );
+      expect(mockRepository.update).toHaveBeenCalledWith(id, {
+        isActive: true,
+      });
+      expect(mockRepository.findOneBy).toHaveBeenCalledWith({ id });
+      expect(result).toEqual(focusArea);
+    });
+  });
 
-      mockFocusAreaRepository.create.mockReturnValue(newFocusArea);
-      mockFocusAreaRepository.save.mockResolvedValue(newFocusArea);
+  describe('remove', () => {
+    it('should delete a focus area', async () => {
+      const id = '1';
+      mockRepository.delete.mockResolvedValue({ affected: 1 });
 
-      await service.create(newFocusAreaDto);
+      await service.remove(id);
 
-      expect(mockFocusAreaRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockRepository.delete).toHaveBeenCalledWith(id);
     });
   });
 });
