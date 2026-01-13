@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import reviewFormReducer from './features/reviewFormSlice';
+import reviewFormReducer from '../features/reviewFormSlice';
 
 export const store = configureStore({
   reducer: {

@@ -23,7 +23,7 @@ import { useCompleteReport } from '../../../hooks/useCompleteReport';
 import keycloak from '../../../utils/keycloak';
 import { useGetSectionFieldResponse } from '../../../hooks/useGetSectionFieldResponse';
 import { useCreateSectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   setAnswer,
   setMultipleAnswers,

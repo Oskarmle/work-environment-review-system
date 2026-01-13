@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../utils/theme';
 import './index.css';
 import { Provider } from 'react-redux';
-import { store } from './store';
+import { store } from './redux/store';
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
