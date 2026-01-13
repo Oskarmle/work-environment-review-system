@@ -43,7 +43,6 @@ describe('StationService', () => {
     it('should create a new station', async () => {
       const createDto: CreateStationDto = {
         stationName: 'Test Station',
-        address: 'Test Address',
       };
       const station = { id: '1', ...createDto };
 
