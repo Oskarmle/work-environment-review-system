@@ -7,8 +7,15 @@ import { useState, useMemo, useEffect } from 'react';
 import ReviewSection from '../../../components/review-section/Review-section';
 import ReviewSectionOverview from '../../../components/review-section-overview/Review-section-overview';
 import { useGetSectionsFields } from '../../../hooks/useGetSectionFields';
-import type { ReportResponse } from '../../../types/report-response';
+import type {
+  ReportResponse,
+  SerializableReportResponse,
+} from '../../../types/report-response';
 import { useGetActiveFocusArea } from '../../../hooks/useGetActiveFocusArea';
+import {
+  fileToSerializable,
+  serializableToFile,
+} from '../../../utils/fileHelpers';
 import { useCreateReport } from '../../../hooks/useCreateReport';
 import type { Dayjs } from 'dayjs';
 import { useCheckAuthentication } from '../../../hooks/useCheckAuthentication';
@@ -16,6 +23,13 @@ import { useCompleteReport } from '../../../hooks/useCompleteReport';
 import keycloak from '../../../utils/keycloak';
 import { useGetSectionFieldResponse } from '../../../hooks/useGetSectionFieldResponse';
 import { useCreateSectionFieldResponse } from '../../../hooks/useCreateReportSectionResponse';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import {
+  setAnswer,
+  setMultipleAnswers,
+  removeMultipleAnswers,
+  resetAnswers,
+} from '../../features/reviewFormSlice';
 
 export const Route = createFileRoute('/create-report/')({
   component: RouteComponent,
@@ -31,10 +45,12 @@ function RouteComponent() {
   const navigate = useNavigate();
   const { reportId: existingReportId } = Route.useSearch();
 
+  const dispatch = useAppDispatch();
+  const sectionFieldAnswers = useAppSelector(
+    (state) => state.reviewForm.sectionFieldAnswers,
+  );
+
   const [selectedReview, setSelectedReview] = useState<string | null>(null);
-  const [sectionFieldAnswers, setSectionFieldAnswers] = useState<
-    Record<string, ReportResponse>
-  >({});
   const { data: sectionFields } = useGetSectionsFields();
 
   const [user, setUser] = useState<string[]>([]);
@@ -56,69 +72,84 @@ function RouteComponent() {
   );
 
   useEffect(() => {
-    if (existingResponses && existingResponses.length > 0 && existingReportId) {
-      const prefilledAnswers: Record<string, ReportResponse> = {};
+    const loadExistingResponses = async () => {
+      if (
+        existingResponses &&
+        existingResponses.length > 0 &&
+        existingReportId
+      ) {
+        const prefilledAnswers: Record<string, SerializableReportResponse> =
+          {};
 
-      existingResponses.forEach((response) => {
-        const sectionFieldId =
-          typeof response.sectionFieldId === 'string'
-            ? response.sectionFieldId
-            : (response as any).sectionField?.id;
+        const promises = existingResponses.map(async (response) => {
+          const sectionFieldId =
+            typeof response.sectionFieldId === 'string'
+              ? response.sectionFieldId
+              : (response as any).sectionField?.id;
 
-        if (!sectionFieldId) {
-          console.warn('Missing sectionFieldId for response:', response);
-          return;
-        }
-
-        let imageFile: File | null = null;
-        if (
-          response.imageData &&
-          response.imageFileName &&
-          response.imageMimeType
-        ) {
-          try {
-            let base64Data = response.imageData;
-
-            if (
-              typeof base64Data !== 'string' &&
-              (response.imageData as any).type === 'Buffer'
-            ) {
-              const uint8Array = new Uint8Array(
-                (response.imageData as any).data,
-              );
-              base64Data = btoa(String.fromCharCode(...uint8Array));
-            }
-
-            const byteCharacters = atob(base64Data as string);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], {
-              type: response.imageMimeType,
-            });
-            imageFile = new File([blob], response.imageFileName, {
-              type: response.imageMimeType,
-            });
-          } catch (error) {
-            console.error('Error converting image data:', error);
+          if (!sectionFieldId) {
+            console.warn('Missing sectionFieldId for response:', response);
+            return;
           }
-        }
 
-        prefilledAnswers[sectionFieldId] = {
-          sectionFieldId: sectionFieldId,
-          reportId: existingReportId,
-          isOkay: response.isOkay,
-          isNotRelevant: response.isNotRelevant,
-          comment: response.comment || '',
-          image: imageFile,
-        };
-      });
+          let imageFile: File | null = null;
+          if (
+            response.imageData &&
+            response.imageFileName &&
+            response.imageMimeType
+          ) {
+            try {
+              let base64Data = response.imageData;
 
-      setSectionFieldAnswers(prefilledAnswers);
-    }
-  }, [existingResponses, existingReportId]);
+              if (
+                typeof base64Data !== 'string' &&
+                (response.imageData as any).type === 'Buffer'
+              ) {
+                const uint8Array = new Uint8Array(
+                  (response.imageData as any).data,
+                );
+                base64Data = btoa(String.fromCharCode(...uint8Array));
+              }
+
+              const byteCharacters = atob(base64Data as string);
+              const byteNumbers = new Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+              const byteArray = new Uint8Array(byteNumbers);
+              const blob = new Blob([byteArray], {
+                type: response.imageMimeType,
+              });
+              imageFile = new File([blob], response.imageFileName, {
+                type: response.imageMimeType,
+              });
+            } catch (error) {
+              console.error('Error converting image data:', error);
+            }
+          }
+
+          let serializableImage = null;
+          if (imageFile) {
+            serializableImage = await fileToSerializable(imageFile);
+          }
+
+          prefilledAnswers[sectionFieldId] = {
+            sectionFieldId: sectionFieldId,
+            reportId: existingReportId,
+            isOkay: response.isOkay,
+            isNotRelevant: response.isNotRelevant,
+            comment: response.comment || '',
+            image: serializableImage,
+          };
+        });
+
+        await Promise.all(promises);
+        dispatch(setMultipleAnswers(prefilledAnswers));
+      }
+    };
+
+    loadExistingResponses();
+  }, [existingResponses, existingReportId, dispatch]);
 
   const sectionRelevantStatus = useMemo(() => {
     const status: Record<string, boolean> = {};
@@ -156,42 +187,54 @@ function RouteComponent() {
     setSelectedReview(sectionId);
   };
 
-  const handleAnswerChange = (
+  const handleAnswerChange = async (
     sectionFieldId: string,
     answer: ReportResponse,
   ) => {
-    setSectionFieldAnswers((prev) => ({
-      ...prev,
-      [sectionFieldId]: answer,
-    }));
+    // Convert File to serializable format for Redux
+    let serializableImage = null;
+    if (answer.image) {
+      serializableImage = await fileToSerializable(answer.image);
+      console.log('Image converted to serializable:', {
+        name: serializableImage.name,
+        size: serializableImage.size,
+        dataUrlLength: serializableImage.dataUrl.length,
+      });
+    }
+
+    const serializableAnswer: SerializableReportResponse = {
+      ...answer,
+      image: serializableImage,
+    };
+
+    console.log('Storing answer in Redux:', {
+      sectionFieldId,
+      hasImage: !!serializableImage,
+    });
+
+    dispatch(setAnswer({ sectionFieldId, answer: serializableAnswer }));
   };
 
   const handleSectionNotRelevant = (
     sectionFieldIds: string[],
     isNotRelevant: boolean,
   ) => {
-    setSectionFieldAnswers((prev) => {
-      if (isNotRelevant) {
-        const updates: Record<string, ReportResponse> = {};
-        sectionFieldIds.forEach((fieldId) => {
-          updates[fieldId] = {
-            sectionFieldId: fieldId,
-            isOkay: false,
-            comment: '',
-            image: null,
-            isNotRelevant: true,
-            reportId: reportId ?? '',
-          };
-        });
-        return { ...prev, ...updates };
-      } else {
-        const newAnswers = { ...prev };
-        sectionFieldIds.forEach((fieldId) => {
-          delete newAnswers[fieldId];
-        });
-        return newAnswers;
-      }
-    });
+    if (isNotRelevant) {
+      const updates: Record<string, SerializableReportResponse> = {};
+      sectionFieldIds.forEach((fieldId) => {
+        updates[fieldId] = {
+          sectionFieldId: fieldId,
+          isOkay: false,
+          comment: '',
+          image: null,
+          isNotRelevant: true,
+          reportId: reportId ?? '',
+        };
+      });
+      dispatch(setMultipleAnswers(updates));
+    } else {
+      dispatch(removeMultipleAnswers(sectionFieldIds));
+    }
   };
 
   const { data: focusAreaData } = useGetActiveFocusArea();
@@ -232,6 +275,7 @@ function RouteComponent() {
         setComment('');
         setStation('');
         setStationId('');
+        dispatch(resetAnswers());
         alert('Rundering startet!');
       },
     });
@@ -255,7 +299,13 @@ function RouteComponent() {
   const createSectionFieldResponseMutation = useCreateSectionFieldResponse();
 
   const handleSaveProgress = () => {
-    const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
+    // Convert SerializableReportResponse back to ReportResponse
+    const sectionFieldResponseArray: ReportResponse[] = Object.values(
+      sectionFieldAnswers,
+    ).map((answer) => ({
+      ...answer,
+      image: answer.image ? serializableToFile(answer.image) : null,
+    }));
 
     if (sectionFieldResponseArray.length > 0) {
       const isUpdating = !!existingReportId;
@@ -276,7 +326,13 @@ function RouteComponent() {
   const completeReportMutation = useCompleteReport();
 
   const handleSubmitReport = () => {
-    const sectionFieldResponseArray = Object.values(sectionFieldAnswers);
+    // Convert SerializableReportResponse back to ReportResponse
+    const sectionFieldResponseArray: ReportResponse[] = Object.values(
+      sectionFieldAnswers,
+    ).map((answer) => ({
+      ...answer,
+      image: answer.image ? serializableToFile(answer.image) : null,
+    }));
 
     if (sectionFieldResponseArray.length !== sectionFields?.length) {
       console.warn(
@@ -348,7 +404,32 @@ function RouteComponent() {
             <ReviewSection
               selectedReview={selectedReview}
               setSelectedReview={setSelectedReview}
-              answers={sectionFieldAnswers}
+              answers={(() => {
+                const convertedAnswers = Object.fromEntries(
+                  Object.entries(sectionFieldAnswers).map(([key, value]) => {
+                    const converted = {
+                      ...value,
+                      image: value.image
+                        ? serializableToFile(value.image)
+                        : null,
+                    } as ReportResponse;
+                    if (converted.image) {
+                      console.log('Converting back to File for display:', {
+                        key,
+                        fileName: converted.image.name,
+                        fileSize: converted.image.size,
+                      });
+                    }
+                    return [key, converted];
+                  }),
+                );
+                console.log(
+                  'Total answers with images:',
+                  Object.values(convertedAnswers).filter((a) => a.image)
+                    .length,
+                );
+                return convertedAnswers;
+              })()}
               onAnswerChange={handleAnswerChange}
               reportId={reportId ?? ''}
             />
