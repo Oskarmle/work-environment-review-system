@@ -78,8 +78,7 @@ function RouteComponent() {
         existingResponses.length > 0 &&
         existingReportId
       ) {
-        const prefilledAnswers: Record<string, SerializableReportResponse> =
-          {};
+        const prefilledAnswers: Record<string, SerializableReportResponse> = {};
 
         const promises = existingResponses.map(async (response) => {
           const sectionFieldId =
@@ -425,8 +424,7 @@ function RouteComponent() {
                 );
                 console.log(
                   'Total answers with images:',
-                  Object.values(convertedAnswers).filter((a) => a.image)
-                    .length,
+                  Object.values(convertedAnswers).filter((a) => a.image).length,
                 );
                 return convertedAnswers;
               })()}
